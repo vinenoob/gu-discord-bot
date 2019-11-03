@@ -2,6 +2,5 @@
 python
 bot/__pycache__
 DONTSHOW
-.gitignore
 bot.bat
 key.txt
