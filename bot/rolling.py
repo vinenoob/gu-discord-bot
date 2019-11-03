@@ -1,7 +1,6 @@
 import random
 
-def roll(ctx, QuantityDSides):
-    channel = ctx.message.channel #allows the bot to know where tf this command came from
+def roll(QuantityDSides):
     Divider = 0 #sets a divider for the letter d in 2d6, for example
     i = 0
     while i < len(QuantityDSides):
@@ -28,7 +27,6 @@ def roll(ctx, QuantityDSides):
 
     if Invalid: #this should only come up if the numbers might actually hurt senpai (or if there is no d)
         return str("'{}'? You are objectively wrong. Use '!roll xDy'. \n x = Number of dice, \n y = Dice sides. \n ie: '!roll 2d6'.".format(QuantityDSides))
-        return #quits the !roll command
 
         #cool features including but not limited to:
         #    - less than infinity dice

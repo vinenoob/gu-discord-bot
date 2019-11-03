@@ -20,7 +20,7 @@ async def randomNumber(ctx, firstNum :int): #activated by "?helloworld"
 @client.command(pass_context=True) # allows the bot to know who tf is talkin
 async def roll(ctx, *, QuantityDSides :str):
     '''Rolls dice. Format is !roll xdy'''
-    await ctx.send(rolling.roll(ctx, QuantityDSides))
+    await ctx.send(rolling.roll(QuantityDSides))
 
 @client.command(pass_context = True)
 async def hello(ctx): #activated by "?helloworld"
