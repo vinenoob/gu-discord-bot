@@ -37,13 +37,17 @@ async def say(ctx, channelid :str, *, words : str):
     if "<#" in channelid: #see if the channel is a channel mention, ie "#but-stuff"
         channelid = channelid[channelid.find("<#") + len("<#"):] #erase the first bit
         channelid = channelid[:channelid.find(">")] #erase the last bit
-    try:
-        channel = client.get_channel(int(channelid))
-    except:
+    channel = client.get_channel(int(channelid))
+    if channel is None: #see if a channel was successfully found
         print("Inavlid channel")
         await ctx.send("Inavlid channel")
         return
-    await channel.send(str(words))
+    try:
+        await channel.send(str(words))
+    except discord.Forbidden:
+        err = "Can't send there. Missing perms?"
+        print(err)
+        await ctx.send(err)
 
 @client.command(pass_context=True)
 async def ping(ctx):
