@@ -43,7 +43,7 @@ async def ping(ctx):
 
 @client.command(pass_context=True)
 async def dadJoke(ctx):
-    '''For shooting the bot and waiting for a response.'''
+    '''For getting a really bad joke.'''
     await ctx.send(dad.getDadJoke())
 
 @client.event
