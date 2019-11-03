@@ -10,7 +10,10 @@ client = commands.Bot(command_prefix=commands.when_mentioned_or('?'), descriptio
 
 @client.event
 async def on_ready():
-    print("Bot")
+    print("Hey Nerds")
+    print("Name: {}".format(client.user.name))
+    print("ID: {}".format(client.user.id))
+    print("___________________________")
 
 @client.command(pass_context = True)
 async def randomNumber(ctx, firstNum :int): #activated by "?helloworld"
