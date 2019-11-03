@@ -6,8 +6,6 @@ import rng
 import rolling
 import dad
 
-startup_extentions = ["test"]
-
 client = commands.Bot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord bot.')
 
 @client.event
