@@ -1,12 +1,6 @@
 import random
-import discord
-from discord.ext.commands import bot
-from discord.ext import commands
 
-
-@client.command(pass_context=True) # allows the bot to know who tf is talkin
-async def roll(ctx, *, QuantityDSides):
-    '''Rolls dice. Format is !roll xdy'''
+def roll(ctx, QuantityDSides):
     channel = ctx.message.channel #allows the bot to know where tf this command came from
     Divider = 0 #sets a divider for the letter d in 2d6, for example
     i = 0
@@ -33,20 +27,20 @@ async def roll(ctx, *, QuantityDSides):
         Invalid = True
 
     if Invalid == True: #this should only come up if the numbers might actually hurt senpai (or if there is no d)
-        await channel.send("'{}'? You are objectively wrong. Use '!roll xDy'. \n x = Number of dice, \n y = Dice sides. \n ie: '!roll 2d6'.".format(QuantityDSides))
+        return str("'{}'? You are objectively wrong. Use '!roll xDy'. \n x = Number of dice, \n y = Dice sides. \n ie: '!roll 2d6'.".format(QuantityDSides))
         return #quits the !roll command
 
-	    #cool features including but not limited to:
+        #cool features including but not limited to:
         #    - less than infinity dice
         #    - sassy responses in chat
         #    - automatically exits the loop so you don't have to
         #    - only exits the loop when it's supposed to
     if Quantity > 10000:
-        await channel.send("I'm not rolling that many dice, it would take *forever*.")
-        return
+        return str("I'm not rolling that many dice, it would take *forever*.")
+        #return
 
     #actually roll the dice
-    await channel.send("Rolling " + str(Quantity)+ " " +str(Sides) + " sided dice.")
+    #await channel.send("Rolling " + str(Quantity)+ " " +str(Sides) + " sided dice.")
     print("Rolling " + str(Quantity)+ " " +str(Sides) + " sided dice.")
     Total = 0
     i = 0
@@ -59,4 +53,4 @@ async def roll(ctx, *, QuantityDSides):
 
     #Here's the result UwU
     print("Total is " + str(Total))
-    await channel.send("Rolled a " + str(Total))
+    return str("Rolled a " + str(Total))

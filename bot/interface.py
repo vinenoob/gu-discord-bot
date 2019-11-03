@@ -3,12 +3,11 @@ import os
 from discord.ext.commands import Bot
 from discord.ext import commands
 import rng
+import rolling
 
 startup_extentions = ["test"]
 
 client = commands.Bot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord bot.')
-
-#import roll
 
 @client.event
 async def on_ready():
@@ -17,6 +16,11 @@ async def on_ready():
 @client.command(pass_context = True)
 async def randomNumber(ctx, firstNum :int): #activated by "?helloworld"
     await ctx.send(rng.randomNumber(firstNum,10))
+
+@client.command(pass_context=True) # allows the bot to know who tf is talkin
+async def roll(ctx, *, QuantityDSides :str):
+    '''Rolls dice. Format is !roll xdy'''
+    await ctx.send(rolling.roll(ctx, QuantityDSides))
 
 @client.command(pass_context = True)
 async def hello(ctx): #activated by "?helloworld"
