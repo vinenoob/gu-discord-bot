@@ -6,8 +6,9 @@ import rng
 
 startup_extentions = ["test"]
 
-bot_prefix = "?"
-client = commands.Bot(command_prefix = bot_prefix)
+client = commands.Bot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord bot.')
+
+#import roll
 
 @client.event
 async def on_ready():
@@ -24,11 +25,15 @@ async def hello(ctx): #activated by "?helloworld"
 
 @client.event
 async def on_message(message):
-    print(message)
+    print(str(message.channel.id) + ": " + str(message.channel.name) + ": " + str(message.author.name) + ": " + str(message.content)) #print(message) gives lots of useless garbage, now streamlined
     await client.process_commands(message) #ensure doesn't mess with other commands
 
+@client.event
+async def on_message_edit(before, after): #this is usefull i promise
+    print(str(before.channel.id) + ": " + str(before.channel.name) + ": " + str(before.author.name) + ": " + str(before.content) + " --->>>> " + str(after.content))
+
 os.chdir("..")
-keyFile = open("gu-discordbot\\DONTSHOW\\key.txt", "r")
+keyFile = open("key.txt", "r")
 key = keyFile.read()
 keyFile.close()
 client.run(key)
