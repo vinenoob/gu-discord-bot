@@ -27,6 +27,19 @@ async def hello(ctx): #activated by "?helloworld"
     print("hello")
     await ctx.send("hello")
 
+@client.command(pass_context=True)
+async def say(ctx, channelid, *, words : str):
+    '''For making the bot come out of the closet for you.
+    Format is !say (channelid) (message)'''
+    channel = bot.get_channel(int(channelid))
+    await channel.send(str(words))
+
+@client.command(pass_context=True)
+async def ping(ctx):
+    '''For shooting the bot and waiting for a response.'''
+    channel = ctx.message.channel
+    await channel.send("Ow.")
+
 @client.event
 async def on_message(message):
     print(str(message.channel.id) + ": " + str(message.channel.name) + ": " + str(message.author.name) + ": " + str(message.content)) #print(message) gives lots of useless garbage, now streamlined
