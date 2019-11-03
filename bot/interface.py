@@ -41,6 +41,11 @@ async def ping(ctx):
     channel = ctx.message.channel
     await channel.send("Ow.")
 
+@client.command(pass_context=True)
+async def dadJoke(ctx):
+    '''For shooting the bot and waiting for a response.'''
+    await ctx.send(dad.getDadJoke())
+
 @client.event
 async def on_message(message):
     if not message.author.bot:

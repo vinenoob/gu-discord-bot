@@ -1,3 +1,6 @@
+from urllib import request
+import json
+
 toWatch = ["i am", "i'm", "im"] #all the things to respond to
 def daddy(message :str):
     dadMessage = ""
@@ -8,3 +11,10 @@ def daddy(message :str):
             dadMessage = "Hi " + name + ", I'm dad!"
             return (True, dadMessage)
     return (False, dadMessage)
+
+jokeApi = "https://us-central1-dadsofunny.cloudfunctions.net/DadJokes/random/jokes"
+def getDadJoke():
+    dadJson = json.loads(request.urlopen(jokeApi).read().decode())
+    dadJoke = dadJson['setup'] + "\n"
+    dadJoke += dadJson['punchline']
+    return dadJoke
