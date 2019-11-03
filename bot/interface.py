@@ -16,7 +16,7 @@ async def on_ready():
     print("___________________________")
 
 @client.command(pass_context = True)
-async def randomNumber(ctx, firstNum :int): #activated by "?helloworld"
+async def randomNumber(ctx, firstNum :int):
     await ctx.send(rng.randomNumber(firstNum,10))
 
 @client.command(pass_context=True)
@@ -30,10 +30,19 @@ async def hello(ctx): #activated by "?helloworld"
     await ctx.send("hello")
 
 @client.command(pass_context=True)
-async def say(ctx, channelid, *, words : str):
+async def say(ctx, channelid :str, *, words : str):
     '''For making the bot come out of the closet for you.
     Format is !say (channelid) (message)'''
-    channel = client.get_channel(int(channelid))
+    channel = None
+    if "<#" in channelid: #see if the channel is a channel mention, ie "#but-stuff"
+        channelid = channelid[channelid.find("<#") + len("<#"):]
+        channelid = channelid[:channelid.find(">")]
+        channel = client.get_channel(int(channelid))
+    elif channelid.isnumeric():
+        channel = client.get_channel(int(channelid))
+    # else:
+    #     for ch in client.get_all_channels():
+    #         if ch.id == int(channelid)
     await channel.send(str(words))
 
 @client.command(pass_context=True)
