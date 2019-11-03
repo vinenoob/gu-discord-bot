@@ -31,7 +31,7 @@ async def hello(ctx): #activated by "?helloworld"
 async def say(ctx, channelid, *, words : str):
     '''For making the bot come out of the closet for you.
     Format is !say (channelid) (message)'''
-    channel = bot.get_channel(int(channelid))
+    channel = client.get_channel(int(channelid))
     await channel.send(str(words))
 
 @client.command(pass_context=True)
