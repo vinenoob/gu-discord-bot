@@ -32,7 +32,6 @@ async def on_message(message):
 async def on_message_edit(before, after): #this is usefull i promise
     print(str(before.channel.id) + ": " + str(before.channel.name) + ": " + str(before.author.name) + ": " + str(before.content) + " --->>>> " + str(after.content))
 
-os.chdir("..")
 keyFile = open("key.txt", "r")
 key = keyFile.read()
 keyFile.close()
