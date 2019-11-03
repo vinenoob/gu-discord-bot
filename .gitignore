@@ -1,6 +1,6 @@
 .vscode
 python
-bot/__pycache__
+__pycache__
 DONTSHOW
 bot.bat
 key.txt
