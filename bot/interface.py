@@ -35,14 +35,14 @@ async def say(ctx, channelid :str, *, words : str):
     Format is !say (channelid) (message)'''
     channel = None
     if "<#" in channelid: #see if the channel is a channel mention, ie "#but-stuff"
-        channelid = channelid[channelid.find("<#") + len("<#"):]
-        channelid = channelid[:channelid.find(">")]
+        channelid = channelid[channelid.find("<#") + len("<#"):] #erase the first bit
+        channelid = channelid[:channelid.find(">")] #erase the last bit
+    try:
         channel = client.get_channel(int(channelid))
-    elif channelid.isnumeric():
-        channel = client.get_channel(int(channelid))
-    # else:
-    #     for ch in client.get_all_channels():
-    #         if ch.id == int(channelid)
+    except:
+        print("Inavlid channel")
+        await ctx.send("Inavlid channel")
+        return
     await channel.send(str(words))
 
 @client.command(pass_context=True)
