@@ -26,7 +26,7 @@ def roll(ctx, QuantityDSides):
     except ValueError:
         Invalid = True
 
-    if Invalid == True: #this should only come up if the numbers might actually hurt senpai (or if there is no d)
+    if Invalid: #this should only come up if the numbers might actually hurt senpai (or if there is no d)
         return str("'{}'? You are objectively wrong. Use '!roll xDy'. \n x = Number of dice, \n y = Dice sides. \n ie: '!roll 2d6'.".format(QuantityDSides))
         return #quits the !roll command
 
