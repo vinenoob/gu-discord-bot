@@ -4,6 +4,7 @@ from discord.ext.commands import Bot
 from discord.ext import commands
 import rng
 import rolling
+import dad
 
 startup_extentions = ["test"]
 
@@ -42,6 +43,10 @@ async def ping(ctx):
 
 @client.event
 async def on_message(message):
+    if not message.author.bot:
+        toDad = dad.daddy(message.content)
+        if(toDad[0]):
+            await message.channel.send(toDad[1])
     print(str(message.channel.id) + ": " + str(message.channel.name) + ": " + str(message.author.name) + ": " + str(message.content)) #print(message) gives lots of useless garbage, now streamlined
     await client.process_commands(message) #ensure doesn't mess with other commands
 
