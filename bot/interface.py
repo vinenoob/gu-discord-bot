@@ -33,9 +33,9 @@ async def on_message(message):
     await client.process_commands(message) #ensure doesn't mess with other commands
 
 @client.event
-async def on_message_edit(before, after): #this is usefull i promise
+async def on_message_edit(before, after): #this is useful i promise
     print(str(before.channel.id) + ": " + str(before.channel.name) + ": " + str(before.author.name) + ": " + str(before.content) + " --->>>> " + str(after.content))
-    
+
 keyFile = open("key.txt", "r")
 key = keyFile.read()
 keyFile.close()
