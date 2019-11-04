@@ -8,3 +8,7 @@ class Greetings(commands.Cog):
     @commands.command(name="cogTest")
     async def cogTest(self, ctx):
         await ctx.send("Cog test successful")
+    
+    @commands.Cog.listener()
+    async def on_message(self, ctx):
+        print("Yo!")
