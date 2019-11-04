@@ -16,8 +16,13 @@ async def on_ready():
     print("___________________________")
 
 @client.command(pass_context = True)
-async def randomNumber(ctx, firstNum :int):
-    await ctx.send(rng.randomNumber(firstNum,10))
+async def randomNumber(ctx, firstNum :int, secondNum :int):
+    '''Generate random number between x and y'''
+    try:
+        num = rng.randomNumber(firstNum,secondNum)
+        await ctx.send(num)
+    except:
+        await ctx.send("Failed")
 
 @client.command(pass_context=True)
 async def roll(ctx, *, QuantityDSides :str):
