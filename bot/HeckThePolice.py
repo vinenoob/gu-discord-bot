@@ -1,1 +1,1 @@
-print("Heck the police + test")
+print("Heck the police")
