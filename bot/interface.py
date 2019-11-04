@@ -5,8 +5,11 @@ from discord.ext import commands
 import rng
 import rolling
 import dad
+import cogTest
 #small change for checking stuff
 client = commands.Bot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord bot.')
+
+client.add_cog(cogTest.Greetings(client))
 
 @client.event
 async def on_ready():
