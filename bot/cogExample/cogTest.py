@@ -1,4 +1,5 @@
 import discord
+from cogExample import cogLogic
 from discord.ext import commands
 
 class Greetings(commands.Cog):
@@ -7,7 +8,7 @@ class Greetings(commands.Cog):
     
     @commands.command(name="cogTest")
     async def cogTest(self, ctx):
-        await ctx.send("Cog test successful")
+        await ctx.send(cogLogic.hi())
     
     @commands.Cog.listener()
     async def on_message(self, ctx):
