@@ -5,7 +5,7 @@ from discord.ext import commands
 import rng
 import rolling
 import dad
-
+#small change for checking stuff
 client = commands.Bot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord bot.')
 
 @client.event
