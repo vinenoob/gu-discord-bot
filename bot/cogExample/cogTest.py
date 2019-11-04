@@ -1,5 +1,6 @@
 import discord
-from cogExample import cogLogic
+import os
+from cogExample import cogLogic #this shows an error for me but works -Jonathan
 from discord.ext import commands
 
 class Greetings(commands.Cog):
@@ -12,4 +13,4 @@ class Greetings(commands.Cog):
     
     @commands.Cog.listener()
     async def on_message(self, ctx):
-        print("Yo!")
+        print("Cog Example Listening")
