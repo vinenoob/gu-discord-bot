@@ -6,10 +6,12 @@ import rng
 import rolling
 import dad
 import cogExample.cogTest
+import gameList.interface
 #small change for checking stuff
 client = commands.Bot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord bot.')
 
 client.add_cog(cogExample.cogTest.Greetings(client))
+client.add_cog(gameList.interface.GameList(client))
 
 @client.event
 async def on_ready():

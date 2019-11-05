@@ -1,5 +1,4 @@
 import discord
-import os
 from cogExample import cogLogic #this shows an error for me but works -Jonathan
 from discord.ext import commands
 
