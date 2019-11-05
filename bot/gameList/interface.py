@@ -9,6 +9,12 @@ class GameList(commands.Cog):
     async def addGame(self, ctx, *,game :str):
         logic.addGame(ctx.author.name,game)
         await ctx.send("Game added!")
+
+    @commands.command(name="addGames")
+    async def addGames(self, ctx, *, games:str):
+        for game in games.split(", "):
+            logic.addGame(ctx.author.name,game)
+        await ctx.send("Games added!")
     
     # @commands.Cog.listener()
     # async def on_message(self, ctx):

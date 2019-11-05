@@ -1,9 +1,19 @@
 import os
 fileLoc = "bot\\gameList\\"
+
+def addGameToFile(file, game :str):
+    file.write(game + "\n")
+
 def addGame(person :str, game :str):
     fileName = fileLoc + person + ".txt"
     with open(fileName, "a+") as file:
         file.write(game + "\n")
+
+# def addGames(person: str, games :list):
+#     fileName = fileLoc + person + ".txt"
+#     with open(fileName, "a+") as gamesFile:
+#         for game in games:
+#             addGame(gamesFile, game)
 
 def gameList(person :str):
     fileName = fileLoc + person + ".txt"
