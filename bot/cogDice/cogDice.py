@@ -9,7 +9,7 @@ class Dice(commands.Cog):
 
 
 	@commands.command(name="Roll")
-	async def roll(QuantityDSides, ctx):
+	async def roll(self, ctx, *, QuantityDSides):
 	    '''Rolls dice. Format is !roll xdy'''
 	    Divider = 0 #sets a divider for the letter d in 2d6, for example
 	    i = 0
