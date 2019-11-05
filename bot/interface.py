@@ -3,15 +3,17 @@ import os
 from discord.ext.commands import Bot
 from discord.ext import commands
 import rng
-import rolling
+#import rolling
 import dad
 import cogExample.cogTest
 import gameList.interface
+import cogDice.cogDice
 #small change for checking stuff
 client = commands.Bot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord bot.')
 
 client.add_cog(cogExample.cogTest.Greetings(client))
 client.add_cog(gameList.interface.GameList(client))
+client.add_cog(cogDice.cogDice.Dice(client))
 
 @client.event
 async def on_ready():
@@ -28,11 +30,6 @@ async def randomNumber(ctx, firstNum :int, secondNum :int):
         await ctx.send(num)
     except:
         await ctx.send("Failed")
-
-@client.command(pass_context=True)
-async def roll(ctx, *, QuantityDSides :str):
-    '''Rolls dice. Format is !roll xdy'''
-    await ctx.send(rolling.roll(QuantityDSides))
 
 @client.command(pass_context = True)
 async def hello(ctx): #activated by "?helloworld"
