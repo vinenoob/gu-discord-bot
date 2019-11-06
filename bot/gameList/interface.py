@@ -46,7 +46,7 @@ class GameList(commands.Cog):
         await ctx.send(logic.commonGames(nameList))
 
     @commands.command(name="pickGame")
-    async def commonGames(self, ctx, *, people :str):
+    async def pickGame(self, ctx, *, people :str):
         '''Find common games among multiple peoples games list'''
         peopleList = people.split(",")
         nameList = []
@@ -56,4 +56,4 @@ class GameList(commands.Cog):
                 id = id[:id.find(">")] #erase the last bit
             person = self.bot.get_user(int(id))
             nameList.append(person.name)
-        await ctx.send(logic.commonGames(random.choice(nameList)))
+        await ctx.send(random.choice(logic.commonGames(nameList)))
