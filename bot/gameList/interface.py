@@ -1,6 +1,6 @@
 from discord.ext import commands
 from gameList import logic
-
+import random
 class GameList(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -44,3 +44,16 @@ class GameList(commands.Cog):
             person = self.bot.get_user(int(id))
             nameList.append(person.name)
         await ctx.send(logic.commonGames(nameList))
+
+    @commands.command(name="pickGame")
+    async def commonGames(self, ctx, *, people :str):
+        '''Find common games among multiple peoples games list'''
+        peopleList = people.split(",")
+        nameList = []
+        for id in peopleList:
+            if "<@!" in id: #see if the channel is a channel mention, ie "#but-stuff"
+                id = id[id.find("<@!") + len("<@!"):] #erase the first bit
+                id = id[:id.find(">")] #erase the last bit
+            person = self.bot.get_user(int(id))
+            nameList.append(person.name)
+        await ctx.send(logic.commonGames(random.choice(nameList)))
