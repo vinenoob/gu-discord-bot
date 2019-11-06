@@ -41,4 +41,4 @@ def commonGames(people :list):
             firstPerson = False
         else:
             gamesInCommon = gamesInCommon.intersection(personGames)
-    return list(gamesInCommon
+    return list(gamesInCommon)
