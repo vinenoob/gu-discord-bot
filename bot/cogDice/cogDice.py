@@ -8,7 +8,7 @@ class Dice(commands.Cog):
 		self.bot = bot
 
 
-	@commands.command(name="Roll")
+	@commands.command(name="Roll", aliases = ["roll", "r"])
 	async def roll(self, ctx, *, QuantityDSides):
 	    '''Rolls dice. Format is !roll xdy'''
 	    Divider = 0 #sets a divider for the letter d in 2d6, for example
@@ -55,7 +55,7 @@ class Dice(commands.Cog):
 	    while i < Quantity:
 		#there needs to be a way to use "client.process_commands()" to prevent this from freezing the bot on large rolls
 		    Roll = random.randint(1,Sides)
-		    print("Rolled " + str(Roll) + ".")
+		    print("\tRolled " + str(Roll) + ".")
 		    Total += Roll
 		    i = i + 1
 
