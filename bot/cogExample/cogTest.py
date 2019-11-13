@@ -11,5 +11,5 @@ class Greetings(commands.Cog):
         await ctx.send(cogLogic.hi())
     
     @commands.Cog.listener()
-    async def on_message(self, ctx):
+    async def on_message(self, message):
         print("Cog Example Listening")
