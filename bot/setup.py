@@ -82,7 +82,12 @@ async def on_message(message):
 async def on_message_edit(before, after): #this is useful i promise
     print(str(before.channel.id) + ": " + str(before.channel.name) + ": " + str(before.author.name) + ": " + str(before.content) + " --->>>> " + str(after.content))
 
-keyFile = open("key.txt", "r")
-key = keyFile.read()
-keyFile.close()
+key = ""
+try:
+    key = os.environ['key']
+except:
+    keyFile = open("key.txt", "r")
+    key = keyFile.read()
+    keyFile.close()
+    
 client.run(key)
