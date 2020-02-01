@@ -1,5 +1,5 @@
 from discord.ext import commands
-from gameList import logic
+from bot.gameList import logic
 import random
 class GameList(commands.Cog):
     def __init__(self, bot):

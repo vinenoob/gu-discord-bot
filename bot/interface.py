@@ -2,18 +2,18 @@ import discord
 import os
 from discord.ext.commands import Bot
 from discord.ext import commands
-import rng
+from bot import rng
 #import rolling
-import dad
-import cogExample.cogTest
-import gameList.interface
-import cogDice.cogDice
+from bot import dad
+import bot.cogExample.cogTest
+import bot.gameList.interface
+import bot.cogDice.cogDice
 #small change for checking stuff
 client = commands.Bot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord bot.')
 
-client.add_cog(cogExample.cogTest.Greetings(client))
-client.add_cog(gameList.interface.GameList(client))
-client.add_cog(cogDice.cogDice.Dice(client))
+client.add_cog(bot.cogExample.cogTest.Greetings(client))
+client.add_cog(bot.gameList.interface.GameList(client))
+client.add_cog(bot.cogDice.cogDice.Dice(client))
 
 @client.event
 async def on_ready():
@@ -82,12 +82,16 @@ async def on_message(message):
 async def on_message_edit(before, after): #this is useful i promise
     print(str(before.channel.id) + ": " + str(before.channel.name) + ": " + str(before.author.name) + ": " + str(before.content) + " --->>>> " + str(after.content))
 
-key = ""
-try:
-    key = os.environ['key']
-except:
-    keyFile = open("key.txt", "r")
-    key = keyFile.read()
-    keyFile.close()
-    
-client.run(key)
+def start_bot():
+    key = ""
+    try:
+        key = os.environ['key']
+    except:
+        keyFile = open("key.txt", "r")
+        key = keyFile.read()
+        keyFile.close()
+        
+    client.run(key)
+
+if __name__ == '__main__':
+    start_bot()
