@@ -89,6 +89,7 @@ def start_bot():
     except:
         keyFile = open("key.txt", "r")
         key = keyFile.read()
+        key = key.replace("\n", "")
         keyFile.close()
         
     client.run(key)
