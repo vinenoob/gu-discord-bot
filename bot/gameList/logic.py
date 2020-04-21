@@ -1,5 +1,5 @@
 import os
-fileLoc = os.path.join(os.getcwd(), 'bot', 'gameList')
+fileLoc = os.path.join(os.getcwd(), 'bot', 'gameList', 'peoples-games')
 
 def addGame(person :str, game :str):
     fileName = os.path.join(fileLoc, person + ".txt")
