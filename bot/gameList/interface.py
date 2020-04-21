@@ -1,6 +1,8 @@
 from discord.ext import commands
+from discord import User
 from bot.gameList import logic
 import random
+import typing
 class GameList(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -27,16 +29,11 @@ class GameList(commands.Cog):
             await ctx.send("Couldn't find " + game)
     
     @commands.command(name="gameList")
-    async def gameList(self, ctx, id :str):
+    async def gameList(self, ctx, *, usr :typing.Optional[User] = 0):
         '''Find out what games someone has on their list'''
-        if "<@!" in id: #see if the channel is a channel mention, ie "#but-stuff"
-            id = id[id.find("<@!") + len("<@!"):] #erase the first bit
-            id = id[:id.find(">")] #erase the last bit
-        try:
-            person = self.bot.get_user(int(id))
-        except:
-            person = ctx.author
-        games = logic.gameList(person.name)
+        if usr == 0:
+            usr = ctx.author
+        games = logic.gameList(usr.name)
         await ctx.send(games)
     
     @commands.command(name="commonGames")
