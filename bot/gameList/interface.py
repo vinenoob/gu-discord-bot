@@ -18,9 +18,14 @@ class GameList(commands.Cog):
             logic.addGame(ctx.author.name,game)
         await ctx.send("Games added!")
     
-    # @commands.Cog.listener()
-    # async def on_message(self, ctx):
-    #     print("Cog Example Listening")
+
+    @commands.command(name="removeGame")
+    async def removeGame(self, ctx, *, game:str):
+        found = logic.removeGame(ctx.author.name, game)
+        if found:
+            await ctx.send(game + " deleted")
+        else:
+            await ctx.send("Couldn't find " + game)
     
     @commands.command(name="gameList")
     async def gameList(self, ctx, id :str):

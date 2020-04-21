@@ -4,3 +4,4 @@ Bot.bat
 python
 __pycache__
 DONTSHOW
+*.txt

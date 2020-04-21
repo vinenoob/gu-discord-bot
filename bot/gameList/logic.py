@@ -1,22 +1,31 @@
 import os
-fileLoc = "bot\\gameList\\"
-
-def addGameToFile(file, game :str):
-    file.write(game + "\n")
+fileLoc = os.path.join(os.getcwd(), 'bot', 'gameList')
 
 def addGame(person :str, game :str):
-    fileName = fileLoc + person + ".txt"
-    with open(fileName, "a+") as file:
-        file.write(game + "\n")
+    fileName = os.path.join(fileLoc, person + ".txt")
+    with open(fileName, "a+") as gamesFile:
+        gamesFile.write(game + "\n")
 
-# def addGames(person: str, games :list):
-#     fileName = fileLoc + person + ".txt"
-#     with open(fileName, "a+") as gamesFile:
-#         for game in games:
-#             addGame(gamesFile, game)
+def removeGame(person :str, game :str):
+    fileName = os.path.join(fileLoc, person + ".txt")
+    games = ""
+    found_game = False
+    with open(fileName, "r") as gamesFile:
+        for line in gamesFile:
+            if line.replace("\n", "") != game:
+                games += line
+            else:
+                found_game = True
+    with open(fileName, "w") as gamesFile:
+        gamesFile.write(games)
+    if(found_game):
+        return True
+    else:
+        return False
+
 
 def gameList(person :str):
-    fileName = fileLoc + person + ".txt"
+    fileName = os.path.join(fileLoc, person + ".txt")
     games = ""
     with open(fileName, "r") as gamesFile:
         for line in gamesFile:
@@ -27,7 +36,7 @@ def commonGames(people :list):
     gamesInCommon = {""}
     firstPerson = True
     for person in people:
-        fileName = fileLoc + person + ".txt"
+        fileName = os.path.join(fileLoc, person + ".txt")
         personGames = {""}
         personGames.clear()
         with open(fileName, "r") as gamesFile:
