@@ -18,7 +18,6 @@ class GameList(commands.Cog):
             logic.addGame(ctx.author.name,game)
         await ctx.send("Games added!")
     
-
     @commands.command(name="removeGame")
     async def removeGame(self, ctx, *, game:str):
         found = logic.removeGame(ctx.author.name, game)
@@ -33,7 +32,10 @@ class GameList(commands.Cog):
         if "<@!" in id: #see if the channel is a channel mention, ie "#but-stuff"
             id = id[id.find("<@!") + len("<@!"):] #erase the first bit
             id = id[:id.find(">")] #erase the last bit
-        person = self.bot.get_user(int(id))
+        try:
+            person = self.bot.get_user(int(id))
+        except:
+            person = ctx.author
         games = logic.gameList(person.name)
         await ctx.send(games)
     
