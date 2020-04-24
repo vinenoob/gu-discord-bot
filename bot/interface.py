@@ -80,6 +80,12 @@ async def on_message(message):
 
 @client.event
 async def on_message_edit(before, after): #this is useful i promise
+    if not after.author.bot:
+        #START DAD
+        toDad = dad.daddy(after.content)
+        if(toDad[0]):
+            await after.channel.send(toDad[1])
+        #END DAD
     print(str(before.channel.id) + ": " + str(before.channel.name) + ": " + str(before.author.name) + ": " + str(before.content) + " --->>>> " + str(after.content))
 
 def start_bot():
