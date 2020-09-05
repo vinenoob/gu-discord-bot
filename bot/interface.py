@@ -67,6 +67,18 @@ async def dadJoke(ctx):
     '''For getting a really bad joke.'''
     await ctx.send(dad.getDadJoke())
 
+@client.command(pass_context=True)
+async def turnDaddyOn(ctx):
+    '''For turning daddy on'''
+    dad.turnDaddyOn()
+    await ctx.send("Daddy has been turned on ;)")
+
+@client.command(pass_context=True)
+async def turnDaddyOff(ctx):
+    '''For turning daddy off :('''
+    dad.turnDaddyOff()
+    await ctx.send("Daddy has been turned off :(")
+
 @client.event
 async def on_message(message):
     if not message.author.bot:
