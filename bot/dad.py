@@ -1,7 +1,7 @@
 from urllib import request
 import json
 
-toWatch = ["i am ", "i'm ", "im ", "i be"] #all the things to respond to
+toWatch = ["i am ", "i'm ", "im ", "i be "] #all the things to respond to
 daddyOn = True
 def daddy(message :str):
     if daddyOn:
