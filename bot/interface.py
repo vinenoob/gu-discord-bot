@@ -71,7 +71,7 @@ async def dadJoke(ctx):
 async def turnDaddyOn(ctx):
     '''For turning daddy on'''
     dad.turnDaddyOn()
-    await ctx.send("Daddy has been turned on ;)")
+    await ctx.send("Thank you for turning daddy on ;)")
 
 @client.command(pass_context=True)
 async def turnDaddyOff(ctx):
