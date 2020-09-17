@@ -12,6 +12,8 @@ def daddy(message :str):
                 name = message[start+len(watch):] #find the name of the idiot who dared say "I am" or similar
                 dadMessage = "Hi " + name + ", I'm dad!"
                 return (True, dadMessage)
+        if message.lower() == "hi dad":
+            return (True, "heck the police")
     return (False, "")
 
 def turnDaddyOn():
@@ -20,7 +22,7 @@ def turnDaddyOn():
 
 def turnDaddyOff():
     global daddyOn
-    daddyOn = False
+    daddyOn = False # :(
 
 jokeApi = "https://us-central1-dadsofunny.cloudfunctions.net/DadJokes/random/jokes"
 def getDadJoke():
