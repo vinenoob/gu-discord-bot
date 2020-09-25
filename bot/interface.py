@@ -80,9 +80,21 @@ async def turnDaddyOff(ctx):
     dad.turnDaddyOff()
     await ctx.send("Daddy has been turned off :(")
 
+dontWatch = [] #a list of people to not respond to with dad, heck, and any others
+
+@client.command(pass_context=True)
+async def startWatching(ctx):
+    dontWatch.remove(ctx.message.author.name)
+    await ctx.send("Ok I'll start watching")
+
+@client.command(pass_context=True)
+async def stopWatching(ctx):
+    dontWatch.append(ctx.message.author.name)
+    await ctx.send("Ok I'll stop watching. This will reset if my program restarts")
+
 @client.event
 async def on_message(message):
-    if not message.author.bot:
+    if not message.author.bot and not message.author.name in dontWatch:
         #START DAD
         toDad = dad.daddy(message.content)
         if(toDad[0]):
@@ -96,7 +108,7 @@ async def on_message(message):
 
 @client.event
 async def on_message_edit(before, after): #this is useful i promise
-    if not after.author.bot:
+    if not after.author.bot and not after.author.name in dontWatch:
         #START DAD
         toDad = dad.daddy(after.content)
         if(toDad[0]):
