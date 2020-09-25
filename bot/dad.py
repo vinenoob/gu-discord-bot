@@ -1,10 +1,9 @@
 from urllib import request
 import json
-from typing import Tuple
 
 toWatch = ["i am ", "i'm ", "im ", "i be "] #all the things to respond to
 daddyOn = True
-def daddy(message :str) -> Tuple[bool, str]:
+def daddy(message :str):
     if daddyOn:
         dadMessage = ""
         for watch in toWatch: #if we can't find any watchwords it will skip the contents of the loop
