@@ -1,53 +1,67 @@
 import os
 fileLoc = os.path.join(os.getcwd(), 'bot', 'gameList', 'peoples-games')
 
-def addGame(person :str, game :str):
-    fileName = os.path.join(fileLoc, person + ".txt")
-    with open(fileName, "a+") as gamesFile:
-        gamesFile.write(game + "\n")
-
-def removeGame(person :str, game :str):
-    fileName = os.path.join(fileLoc, person + ".txt")
-    games = ""
-    found_game = False
-    with open(fileName, "r") as gamesFile:
+def getGames(person :str):
+    games = []
+    fileName = getFileName(person)
+    with open(fileName, "a+") as gamesFile: #a+ to create file if the user doesnt have one
+        gamesFile.seek(0)
         for line in gamesFile:
-            if line.replace("\n", "") != game:
-                games += line
-            else:
-                found_game = True
-    with open(fileName, "w") as gamesFile:
-        gamesFile.write(games)
-    if(found_game):
-        return True
+            games.append(line.replace("\n", "")) #add games, exclude newline characters
+    return games
+
+def getFileName(person :str):
+    return os.path.join(fileLoc, person + ".txt")
+
+def addGame(person :str, game :str):
+    games = getGames(person)
+    if game in games:
+        return (False, game + " already in your list!")
     else:
-        return False
+        with open(getFileName(person), "a+") as gamesFile:
+            gamesFile.write(game + "\n")
+        return (True, "Added " + game)
+
+def removeGame(person :str, gameToRemove :str):
+    found_game = False
+    games = getGames(person)
+
+    for game in games:
+        if game == gameToRemove:
+            games.remove(game)
+            found_game = True
+            break
+
+    with open(getFileName(person), "w") as gamesFile:
+        for game in games:
+            gamesFile.write(game + "\n")
+
+    return found_game
 
 
 def gameList(person :str):
-    fileName = os.path.join(fileLoc, person + ".txt")
     games = ""
-    with open(fileName, "r") as gamesFile:
-        for line in gamesFile:
-            games += line
+    gamesList = getGames(person)
+    for game in gamesList:
+        games += game + "\n"
     return games
 
 def commonGames(people :list):
-    gamesInCommon = {""}
-    firstPerson = True
+    gameSets = []
     for person in people:
-        fileName = os.path.join(fileLoc, person + ".txt")
-        personGames = {""}
-        personGames.clear()
-        with open(fileName, "r") as gamesFile:
-            for line in gamesFile:
-                if line[len(line)-1:] == "\n":
-                    personGames.add(line.lower()[:len(line)-1]) #set lower, delete newline
-                else:
-                    personGames.add(line.lower())
-        if firstPerson:
-            gamesInCommon = personGames
-            firstPerson = False
+        gamesList = getGames(person)
+        personGames = set() #this is a set
+        for game in gamesList:
+            personGames.add(game.lower())
+        gameSets.append(personGames)
+        
+    gamesInCommon = set()
+    for i in range(len(gameSets)):
+        if i == 0:
+            gamesInCommon = gameSets[i]
         else:
-            gamesInCommon = gamesInCommon.intersection(personGames)
+            gamesInCommon = gamesInCommon.intersection(gameSets[i])
     return list(gamesInCommon)
+
+if __name__ == "__main__":
+    print(commonGames(["vinenoob", "test", "test2"]))

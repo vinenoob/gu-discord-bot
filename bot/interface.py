@@ -8,6 +8,7 @@ import dad
 import cogExample.cogTest
 import gameList.interface
 import cogDice.cogDice
+import heck.logic
 #small change for checking stuff
 client = commands.Bot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord ')
 
@@ -87,6 +88,9 @@ async def on_message(message):
         if(toDad[0]):
             await message.channel.send(toDad[1])
         #END DAD
+        toHeck = heck.logic.heckin(message.content)
+        if(toHeck[0]):
+            await message.channel.send(toHeck[1])
     print(str(message.channel.id) + ": " + str(message.channel.name) + ": " + str(message.author.name) + ": " + str(message.content)) #print(message) gives lots of useless garbage, now streamlined
     await client.process_commands(message) #ensure doesn't mess with other commands
 

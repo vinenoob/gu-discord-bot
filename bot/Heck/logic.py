@@ -1,8 +1,8 @@
 from urllib import request
 import json
 
-toWatch = ["heck", "hell", "darn",] #all the things to respond to
-def daddy(message :str):
+toWatch = ["heck", "hell", "darn", "david", "heckin"] #all the things to respond to
+def heckin(message :str):
     holy = ""
     for watch in toWatch:
         if watch in message.lower(): #if we find what we are looking for
