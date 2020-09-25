@@ -1,6 +1,6 @@
 from discord.ext import commands
 from discord import User
-from bot.gameList import logic
+import gameList.logic as logic
 import random
 import typing
 class GameList(commands.Cog):

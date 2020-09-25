@@ -2,18 +2,18 @@ import discord
 import os
 from discord.ext.commands import Bot
 from discord.ext import commands
-from bot import rng
+import rng
 #import rolling
-from bot import dad
-import bot.cogExample.cogTest
-import bot.gameList.interface
-import bot.cogDice.cogDice
+import dad
+import cogExample.cogTest
+import gameList.interface
+import cogDice.cogDice
 #small change for checking stuff
-client = commands.Bot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord bot.')
+client = commands.Bot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord ')
 
-client.add_cog(bot.cogExample.cogTest.Greetings(client))
-client.add_cog(bot.gameList.interface.GameList(client))
-client.add_cog(bot.cogDice.cogDice.Dice(client))
+client.add_cog(cogExample.cogTest.Greetings(client))
+client.add_cog(gameList.interface.GameList(client))
+client.add_cog(cogDice.cogDice.Dice(client))
 
 @client.event
 async def on_ready():

@@ -1,5 +1,6 @@
 import discord
-import bot.cogExample.cogLogic #this shows an error for me but works -Jonathan
+#import bot.cogExample.cogLogic #this shows an error for me but works -Jonathan
+import cogExample.cogLogic as cogLogic
 from discord.ext import commands
 
 class Greetings(commands.Cog):
