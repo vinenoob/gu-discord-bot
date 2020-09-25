@@ -102,6 +102,9 @@ async def on_message_edit(before, after): #this is useful i promise
         if(toDad[0]):
             await after.channel.send(toDad[1])
         #END DAD
+        toHeck = heck.logic.heckin(after.content)
+        if(toHeck[0]):
+            await after.channel.send(toHeck[1])
     print(str(before.channel.id) + ": " + str(before.channel.name) + ": " + str(before.author.name) + ": " + str(before.content) + " --->>>> " + str(after.content))
 
 def start_bot():
