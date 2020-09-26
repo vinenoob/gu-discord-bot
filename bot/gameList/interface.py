@@ -40,7 +40,7 @@ class GameList(commands.Cog):
     @commands.command(name="commonGames")
     async def commonGames(self, ctx, *, people :str):
         '''Find common games among multiple peoples games list'''
-        peopleList = people.split(",")
+        peopleList = people.split(" ")
         nameList = []
         for id in peopleList:
             if "<@!" in id: #see if the channel is a channel mention, ie "#but-stuff"
