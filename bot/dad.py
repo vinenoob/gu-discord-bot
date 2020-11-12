@@ -18,7 +18,7 @@ def daddy(message: str):
                 watchWordWords = watchWord.split()
                 for j in range(len(watchWordWords)):
                     try:
-                        if watchWordWords[j] != messageWords[i + j]: #compare watchWordWords to the messageWords, trying to prove they don't match
+                        if watchWordWords[j] != messageWords[i + j].lower(): #compare watchWordWords to the messageWords, trying to prove they don't match
                             match = False 
                             break
                     except IndexError:
