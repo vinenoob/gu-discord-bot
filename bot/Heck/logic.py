@@ -1,7 +1,7 @@
 from urllib import request
 import json
 
-toWatch = ["heck", "hell", "darn", "david", "heckin", "fack", "scheiss",] #all the things to respond to
+toWatch = ["heck", "hell", "darn", "david", "heckin", "fack", "scheiss", "frick", "shrimp"] #all the things to respond to
 def heckin(message :str):
     holy = ""
     for watch in toWatch:
