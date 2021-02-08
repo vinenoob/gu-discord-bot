@@ -29,6 +29,8 @@ def daddy(message: str):
                     dadMessage = "Hi " + name + ", I'm dad!"
                     return (True, dadMessage)
         return (False, "")
+    else:
+        return (False, "")
 
 
 def daddy2(message :str):
