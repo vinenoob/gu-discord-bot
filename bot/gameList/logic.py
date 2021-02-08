@@ -1,5 +1,5 @@
 import os
-fileLoc = os.path.join(os.getcwd(), 'bot', 'gameList', 'peoples-games')
+fileLoc = os.path.join(os.getcwd(), 'gameList', 'peoples-games')
 
 def getGames(person :str):
     games = []
