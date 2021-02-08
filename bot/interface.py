@@ -9,6 +9,7 @@ import cogExample.cogTest
 import gameList.interface
 import cogDice.cogDice
 import heck.interface
+import magic8.interface
 #small change for checking stuff
 client = commands.Bot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord ')
 
@@ -16,6 +17,7 @@ client.add_cog(cogExample.cogTest.Greetings(client))
 client.add_cog(gameList.interface.GameList(client))
 client.add_cog(cogDice.cogDice.Dice(client))
 client.add_cog(heck.interface.Heck(client))
+client.add_cog(magic8.interface.Magic8(client))
 
 @client.event
 async def on_ready():
