@@ -13,7 +13,7 @@ def daddy(message :str):
         for watchWord in toWatch:
             indx = message.find(watchWord)
             if indx != -1: #if we found the word
-                if message[indx + len(watchWord) + 1] == " ": 
+                if message[indx + len(watchWord)] == " ": 
                     #check if the character after the watch word is a space, helping to indicate if it is it's own 
                     # word/phrase, and not apart of another word ie "i believe" contains "i be" but we don't want
                     # to catch it
