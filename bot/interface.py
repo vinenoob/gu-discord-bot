@@ -4,7 +4,7 @@ from discord.ext.commands import Bot
 from discord.ext import commands
 import rng
 #import rolling
-import dad
+import dad.interface
 import cogExample.cogTest
 import gameList.interface
 import cogDice.cogDice
@@ -13,6 +13,7 @@ import magic8.interface
 #small change for checking stuff
 client = commands.Bot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord ')
 
+client.add_cog(dad.interface.Dad(client))
 client.add_cog(cogExample.cogTest.Greetings(client))
 client.add_cog(gameList.interface.GameList(client))
 client.add_cog(cogDice.cogDice.Dice(client))
@@ -66,61 +67,10 @@ async def ping(ctx):
     channel = ctx.message.channel
     await channel.send("Ow.")
 
-@client.command(pass_context=True)
-async def dadJoke(ctx):
-    '''For getting a really bad joke.'''
-    await ctx.send(dad.getDadJoke())
-
-@client.command(pass_context=True)
-async def turnDaddyOn(ctx):
-    '''For turning daddy on'''
-    dad.turnDaddyOn()
-    await ctx.send("Thank you for turning daddy on ;)")
-
-@client.command(pass_context=True)
-async def turnDaddyOff(ctx):
-    '''For turning daddy off :('''
-    dad.turnDaddyOff()
-    await ctx.send("Daddy has been turned off :(")
-
-dontWatch = [] #a list of people to not respond to with dad, heck, and any others
-
-@client.command(pass_context=True)
-async def startWatching(ctx):
-    dontWatch.remove(ctx.message.author.name)
-    await ctx.send("Ok I'll start watching")
-
-@client.command(pass_context=True)
-async def stopWatching(ctx):
-    dontWatch.append(ctx.message.author.name)
-    await ctx.send("Ok I'll stop watching. This will reset if my program restarts")
-
 @client.event
 async def on_message(message):
-    if not message.author.bot and not message.author.name in dontWatch:
-        #START DAD
-        toDad = dad.daddy(message.content)
-        if(toDad[0]):
-            await message.channel.send(toDad[1])
-        #END DAD
-        # toHeck = heck.logic.heckin(message.content)
-        # if(toHeck[0]):
-        #     await message.channel.send(toHeck[1])
     print(str(message.channel.id) + ": " + str(message.channel.name) + ": " + str(message.author.name) + ": " + str(message.content)) #print(message) gives lots of useless garbage, now streamlined
     await client.process_commands(message) #ensure doesn't mess with other commands
-
-@client.event
-async def on_message_edit(before, after): #this is useful i promise
-    if not after.author.bot and not after.author.name in dontWatch:
-        #START DAD
-        toDad = dad.daddy(after.content)
-        if(toDad[0]):
-            await after.channel.send(toDad[1])
-        #END DAD
-        toHeck = heck.logic.heckin(after.content)
-        if(toHeck[0]):
-            await after.channel.send(toHeck[1])
-    print(str(before.channel.id) + ": " + str(before.channel.name) + ": " + str(before.author.name) + ": " + str(before.content) + " --->>>> " + str(after.content))
 
 def start_bot():
     key = ""
@@ -136,3 +86,34 @@ def start_bot():
 
 if __name__ == '__main__':
     start_bot()
+
+# @client.command(pass_context=True)
+# async def dadJoke(ctx):
+#     '''For getting a really bad joke.'''
+#     await ctx.send(dad.getDadJoke())
+
+# @client.command(pass_context=True)
+# async def turnDaddyOn(ctx):
+#     '''For turning daddy on'''
+#     dad.turnDaddyOn()
+#     await ctx.send("Thank you for turning daddy on ;)")
+
+# @client.command(pass_context=True)
+# async def turnDaddyOff(ctx):
+#     '''For turning daddy off :('''
+#     dad.turnDaddyOff()
+#     await ctx.send("Daddy has been turned off :(")
+
+#TODO: add these to their modules
+# @client.event
+# async def on_message_edit(before, after): #this is useful i promise
+#     if not after.author.bot:
+#         #START DAD
+#         toDad = dad.daddy(after.content)
+#         if(toDad[0]):
+#             await after.channel.send(toDad[1])
+#         #END DAD
+#         toHeck = heck.logic.heckin(after.content)
+#         if(toHeck[0]):
+#             await after.channel.send(toHeck[1])
+#     print(str(before.channel.id) + ": " + str(before.channel.name) + ": " + str(before.author.name) + ": " + str(before.content) + " --->>>> " + str(after.content))

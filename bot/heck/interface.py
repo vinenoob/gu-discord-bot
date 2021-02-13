@@ -5,7 +5,7 @@ from discord.ext import commands
 class Heck(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.dontWatch = []
+        self.dontWatch = [] #TODO: Implement
         print("Heck Initiated")
     
     @commands.Cog.listener()
