@@ -1,6 +1,8 @@
+import asyncio
 from logging import log
 import discord
 from discord import message
+from discord.ext.commands.core import command
 import dad.logic as logic
 from discord.ext import commands
 
@@ -18,8 +20,10 @@ class Dad(commands.Cog):
                 await message.channel.send(toDad[1])
     
     @commands.command(name="dadJoke")
-    async def dadJoke(self, ctx):
+    async def dadJoke(self, ctx :commands.context.Context):
         '''Get a dad joke'''
+        async with ctx.typing():
+            await asyncio.sleep(0.75)
         await ctx.send(logic.getDadJoke())
 
     @commands.command(name="turnDaddyOn")
