@@ -13,4 +13,5 @@ class Greetings(commands.Cog):
     
     @commands.Cog.listener()
     async def on_message(self, message):
-        print("Cog Example Listening")
+        pass
+        # print("Cog Example Listening")

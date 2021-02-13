@@ -25,6 +25,7 @@ class Dad(commands.Cog):
         async with ctx.typing():
             await asyncio.sleep(0.75)
         await ctx.send(logic.getDadJoke())
+        
 
     @commands.command(name="turnDaddyOn")
     async def turnDaddyOn(self, ctx):
