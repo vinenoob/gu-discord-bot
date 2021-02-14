@@ -50,7 +50,6 @@ async def hello(ctx):
 #https://gtts.readthedocs.io/en/latest/module.html#module-gtts.tts
 #https://www.youtube.com/watch?v=ml-5tXRmmFk&ab_channel=RoboticNation
 
-# conn_vc:voice_client.VoiceProtocol = None
 # import dad.logic
 @client.command(pass_context = True)
 async def join(ctx: commands.Context, *, toSay:str): #activated by "?join"
@@ -60,7 +59,6 @@ async def join(ctx: commands.Context, *, toSay:str): #activated by "?join"
         toSay = "john is a nerd"
     myobj = gTTS(text =toSay, lang="en", slow=True, tld="ca")
     myobj.save("test.mp3")
-    print(ctx.voice_client)
     if voice_channel != None:
         if ctx.voice_client == None:
             await voice_channel.connect()
