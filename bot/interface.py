@@ -1,8 +1,12 @@
+from asyncio.tasks import sleep
 import discord
 import os
+from discord import voice_client
 from discord.ext.commands import Bot
 from discord.ext import commands
+from discord.utils import sleep_until
 import rng
+from gtts import gTTS
 #import rolling
 import dad.interface
 import cogExample.cogTest
@@ -37,9 +41,39 @@ async def randomNumber(ctx, firstNum :int, secondNum :int):
         await ctx.send("Failed")
 
 @client.command(pass_context = True)
-async def hello(ctx): #activated by "?helloworld"
+async def hello(ctx): 
     print("hello")
     await ctx.send("hello")
+
+#TODO: Repeat unable to voice
+# join when john joins and calls him nerd
+#https://gtts.readthedocs.io/en/latest/module.html#module-gtts.tts
+#https://www.youtube.com/watch?v=ml-5tXRmmFk&ab_channel=RoboticNation
+conn_vc:voice_client.VoiceProtocol = None
+import dad.logic
+@client.command(pass_context = True)
+async def join(ctx: commands.Context, *, toSay:str): #activated by "?join"
+    voice_channel: discord.VoiceChannel = ctx.author.voice.channel
+    # voice_channel: discord.VoiceChannel = client.get_channel(494009527558209536)
+    if ctx.author.name == "hoyo74":
+        toSay = "john is a nerd"
+    myobj = gTTS(text =toSay, lang="en", slow=True, tld="ca")
+    myobj.save("test.mp3")
+    global conn_vc
+    print(conn_vc)
+    if voice_channel != None:
+        if conn_vc == None:
+            conn_vc = await voice_channel.connect()
+    conn_vc.play(discord.FFmpegPCMAudio("test.mp3"))
+    # await ctx.send("join")
+
+@client.command(pass_context = True)
+async def leave(ctx : commands.Context): #activated by "?leave"
+    print("bye")
+    global conn_vc
+    await conn_vc.disconnect()
+    conn_vc = None
+    await ctx.send("leave")
 
 @client.command(pass_context=True)
 async def say(ctx, channelid :str, *, words : str):
