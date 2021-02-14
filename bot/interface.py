@@ -49,8 +49,9 @@ async def hello(ctx):
 # join when john joins and calls him nerd
 #https://gtts.readthedocs.io/en/latest/module.html#module-gtts.tts
 #https://www.youtube.com/watch?v=ml-5tXRmmFk&ab_channel=RoboticNation
-conn_vc:voice_client.VoiceProtocol = None
-import dad.logic
+
+# conn_vc:voice_client.VoiceProtocol = None
+# import dad.logic
 @client.command(pass_context = True)
 async def join(ctx: commands.Context, *, toSay:str): #activated by "?join"
     voice_channel: discord.VoiceChannel = ctx.author.voice.channel
@@ -59,21 +60,16 @@ async def join(ctx: commands.Context, *, toSay:str): #activated by "?join"
         toSay = "john is a nerd"
     myobj = gTTS(text =toSay, lang="en", slow=True, tld="ca")
     myobj.save("test.mp3")
-    global conn_vc
-    print(conn_vc)
+    print(ctx.voice_client)
     if voice_channel != None:
-        if conn_vc == None:
-            conn_vc = await voice_channel.connect()
-    conn_vc.play(discord.FFmpegPCMAudio("test.mp3"))
-    # await ctx.send("join")
+        if ctx.voice_client == None:
+            await voice_channel.connect()
+    ctx.voice_client.play(discord.FFmpegPCMAudio("test.mp3"))
 
 @client.command(pass_context = True)
 async def leave(ctx : commands.Context): #activated by "?leave"
     print("bye")
-    global conn_vc
-    await conn_vc.disconnect()
-    conn_vc = None
-    await ctx.send("leave")
+    await ctx.voice_client.disconnect()
 
 @client.command(pass_context=True)
 async def say(ctx, channelid :str, *, words : str):
