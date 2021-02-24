@@ -15,7 +15,7 @@ import cogDice.cogDice
 import heck.interface
 import magic8.interface
 #small change for checking stuff
-client = commands.Bot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord ')
+client = commands.AutoShardedBot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord ')
 
 client.add_cog(dad.interface.Dad(client))
 client.add_cog(cogExample.cogTest.Greetings(client))
@@ -55,9 +55,9 @@ async def hello(ctx):
 async def join(ctx: commands.Context, *, toSay:str): #activated by "?join"
     voice_channel: discord.VoiceChannel = ctx.author.voice.channel
     # voice_channel: discord.VoiceChannel = client.get_channel(494009527558209536)
-    if ctx.author.name == "hoyo74":
-        toSay = "john is a nerd"
-    myobj = gTTS(text =toSay, lang="en", slow=True, tld="ca")
+    # if ctx.author.name == "hoyo74":
+    #     toSay = "john is a nerd"
+    myobj = gTTS(text =toSay, lang="en", slow=False, tld="ca")
     myobj.save("test.mp3")
     if voice_channel != None:
         if ctx.voice_client == None:
