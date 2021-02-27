@@ -29,12 +29,12 @@ class Dad(commands.Cog):
 
     @commands.command(name="turnDaddyOn")
     async def turnDaddyOn(self, ctx):
-        '''Get a dad joke'''
+        '''Stops daddy from watching you'''
         logic.turnDaddyOn()
         await ctx.send("Daddy turned on ;)")
     
     @commands.command(name="turnDaddyOff")
     async def turnDaddyOff(self, ctx):
-        '''Get a dad joke'''
+        '''Daddy watches you'''
         logic.turnDaddyOff()
         await ctx.send("Daddy has been forcibly turned off :(")
