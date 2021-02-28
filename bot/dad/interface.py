@@ -22,8 +22,7 @@ class Dad(commands.Cog):
     @commands.command(name="dadJoke")
     async def dadJoke(self, ctx :commands.context.Context):
         '''Get a dad joke'''
-        async with ctx.typing():
-            await asyncio.sleep(0.75)
+        await ctx.trigger_typing()
         await ctx.send(logic.getDadJoke())
         
 
