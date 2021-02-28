@@ -1,3 +1,4 @@
+import typing
 import discord
 import os
 from discord.ext.commands import Bot
@@ -10,8 +11,8 @@ import gameList.interface
 import cogDice.cogDice
 import heck.interface
 import magic8.interface
-#small change for checking stuff
-client = commands.Bot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord ')
+
+client = commands.AutoShardedBot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord ')
 
 client.add_cog(dad.interface.Dad(client))
 client.add_cog(cogExample.cogTest.Greetings(client))
@@ -42,17 +43,11 @@ async def hello(ctx): #activated by "?helloworld"
     await ctx.send("hello")
 
 @client.command(pass_context=True)
-async def say(ctx, channelid :str, *, words : str):
+async def say(ctx: commands.Context, channel :typing.Optional[discord.TextChannel] = None, *, words : str):
     '''For making the bot come out of the closet for you.
     Format is !say (channelid) (message)'''
-    channel = None
-    if "<#" in channelid: #see if the channel is a channel mention, ie "#but-stuff"
-        channelid = channelid[channelid.find("<#") + len("<#"):] #erase the first bit
-        channelid = channelid[:channelid.find(">")] #erase the last bit
-    channel = client.get_channel(int(channelid))
-    if channel is None: #see if a channel was successfully found
-        print("Inavlid channel")
-        await ctx.send("Inavlid channel")
+    if channel == None:
+        await ctx.send("Invalid channel")
         return
     try:
         await channel.send(str(words))

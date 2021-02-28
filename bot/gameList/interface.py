@@ -1,8 +1,12 @@
+import discord
 from discord.ext import commands
 from discord import User
+from discord.ext.commands.converter import Converter
+from discord.ext.commands.core import command
 import gameList.logic as logic
 import random
 import typing
+
 class GameList(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -39,17 +43,18 @@ class GameList(commands.Cog):
         games = logic.gameList(usr.name)
         await ctx.send(games)
     
+
+    @commands.command(name="test")
+    async def test(self, ctx: commands.Context, *people :discord.User):
+        print(people)
+
     @commands.command(name="commonGames")
-    async def commonGames(self, ctx, *, people :str):
+    async def commonGames(self, ctx: commands.Context, *people :discord.User ):
         '''Find common games among multiple peoples games list'''
-        peopleList = people.split(" ")
-        nameList = []
-        for id in peopleList:
-            if "<@!" in id: #see if the channel is a channel mention, ie "#but-stuff"
-                id = id[id.find("<@!") + len("<@!"):] #erase the first bit
-                id = id[:id.find(">")] #erase the last bit
-            person = self.bot.get_user(int(id))
-            nameList.append(person.name)
+        nameList: typing.List[str] = []
+        user: discord.User
+        for user in people:
+            nameList.append(user.name)
         await ctx.send(logic.commonGames(nameList))
 
     @commands.command(name="pickGame")

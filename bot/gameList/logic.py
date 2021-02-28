@@ -1,4 +1,5 @@
 import os
+import typing
 fileLoc = os.path.join(os.getcwd(), 'gameList', 'peoples-games')
 
 def getGames(person :str):
@@ -46,7 +47,7 @@ def gameList(person :str):
         games += game + "\n"
     return games
 
-def commonGames(people :list):
+def commonGames(people :typing.List[str]):
     gameSets = []
     for person in people:
         gamesList = getGames(person)
