@@ -54,12 +54,14 @@ class Voice(commands.Cog):
     @commands.command(name= "stop_repeat")
     async def stop_repeat(self, ctx: commands.Context):
         '''Stops the bot from repeating a text channel'''
+        if in_voice(ctx):
+            await ctx.voice_client.disconnect() #unsure if the disconnect behavior is wanted
         await ctx.send("No longer repeating channel " + self.watch.name)
         self.watch = None
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if not message.author.bot and not "stop_repeat" in message.content:
+        if not message.author.bot:
             if message.channel == self.watch:
                 try:
                     voice_channel: discord.VoiceClient = get(self.bot.voice_clients, guild= message.guild)
@@ -71,7 +73,13 @@ class Voice(commands.Cog):
                     print(error)
                 except Exception as error:
                     print(error)
-        pass
+    
+    # Below is considered for use if we want the bot to clear watch whenever it leaves voice
+    # @commands.Cog.listener()
+    # async def on_voice_state_update(self, member, before, after):
+    #     if member == self.bot.user:
+    #         print("IS BOT")
+        
 
 def in_voice(ctx: commands.Context):
     if ctx.voice_client != None:
