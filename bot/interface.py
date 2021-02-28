@@ -14,6 +14,7 @@ import gameList.interface
 import cogDice.cogDice
 import heck.interface
 import magic8.interface
+import voice.interface
 #small change for checking stuff
 client = commands.AutoShardedBot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord ')
 
@@ -23,6 +24,7 @@ client.add_cog(gameList.interface.GameList(client))
 client.add_cog(cogDice.cogDice.Dice(client))
 client.add_cog(heck.interface.Heck(client))
 client.add_cog(magic8.interface.Magic8(client))
+client.add_cog(voice.interface.Voice(client))
 
 @client.event
 async def on_ready():
@@ -50,24 +52,7 @@ async def hello(ctx):
 #https://gtts.readthedocs.io/en/latest/module.html#module-gtts.tts
 #https://www.youtube.com/watch?v=ml-5tXRmmFk&ab_channel=RoboticNation
 
-# import dad.logic
-@client.command(pass_context = True)
-async def join(ctx: commands.Context, *, toSay:str): #activated by "?join"
-    voice_channel: discord.VoiceChannel = ctx.author.voice.channel
-    # voice_channel: discord.VoiceChannel = client.get_channel(494009527558209536)
-    # if ctx.author.name == "hoyo74":
-    #     toSay = "john is a nerd"
-    myobj = gTTS(text =toSay, lang="en", slow=False, tld="ca")
-    myobj.save("test.mp3")
-    if voice_channel != None:
-        if ctx.voice_client == None:
-            await voice_channel.connect()
-    ctx.voice_client.play(discord.FFmpegPCMAudio("test.mp3"))
 
-@client.command(pass_context = True)
-async def leave(ctx : commands.Context): #activated by "?leave"
-    print("bye")
-    await ctx.voice_client.disconnect()
 
 @client.command(pass_context=True)
 async def say(ctx, channelid :str, *, words : str):
