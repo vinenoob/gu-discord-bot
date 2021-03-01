@@ -1,9 +1,12 @@
 import typing
 import discord
 import os
+from discord import voice_client
 from discord.ext.commands import Bot
 from discord.ext import commands
+from discord.utils import sleep_until
 import rng
+from gtts import gTTS
 #import rolling
 import dad.interface
 import cogExample.cogTest
@@ -12,6 +15,7 @@ import cogDice.cogDice
 import heck.interface
 import magic8.interface
 
+import voice.interface
 client = commands.AutoShardedBot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord ')
 
 client.add_cog(dad.interface.Dad(client))
@@ -20,6 +24,7 @@ client.add_cog(gameList.interface.GameList(client))
 client.add_cog(cogDice.cogDice.Dice(client))
 client.add_cog(heck.interface.Heck(client))
 client.add_cog(magic8.interface.Magic8(client))
+client.add_cog(voice.interface.Voice(client))
 
 @client.event
 async def on_ready():
@@ -38,9 +43,16 @@ async def randomNumber(ctx, firstNum :int, secondNum :int):
         await ctx.send("Failed")
 
 @client.command(pass_context = True)
-async def hello(ctx): #activated by "?helloworld"
+async def hello(ctx): 
     print("hello")
     await ctx.send("hello")
+
+#TODO: Repeat unable to voice
+# join when john joins and calls him nerd
+#https://gtts.readthedocs.io/en/latest/module.html#module-gtts.tts
+#https://www.youtube.com/watch?v=ml-5tXRmmFk&ab_channel=RoboticNation
+
+
 
 @client.command(pass_context=True)
 async def say(ctx: commands.Context, channel :typing.Optional[discord.TextChannel] = None, *, words : str):
