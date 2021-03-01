@@ -19,7 +19,7 @@ class Voice(commands.Cog):
     async def join(self, ctx: commands.Context):
         '''Joins the voice channel the user is in'''
         try:
-            voice_channel = ctx.author.voice.channel
+            voice_channel: discord.VoiceChannel = ctx.author.voice.channel
             if in_voice(ctx):
                 await ctx.voice_client.disconnect() #if the bot is alread in a channel, leave it
             await voice_channel.connect()
@@ -59,6 +59,8 @@ class Voice(commands.Cog):
         await ctx.send("No longer repeating channel " + self.watch.name)
         self.watch = None
 
+
+    #TODO: deal with user and channel mentions, along with emojis and web links
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if not message.author.bot:
