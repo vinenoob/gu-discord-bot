@@ -1,4 +1,4 @@
-from asyncio.tasks import sleep
+import typing
 import discord
 import os
 from discord import voice_client
@@ -14,8 +14,8 @@ import gameList.interface
 import cogDice.cogDice
 import heck.interface
 import magic8.interface
+
 import voice.interface
-#small change for checking stuff
 client = commands.AutoShardedBot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord ')
 
 client.add_cog(dad.interface.Dad(client))
@@ -55,17 +55,11 @@ async def hello(ctx):
 
 
 @client.command(pass_context=True)
-async def say(ctx, channelid :str, *, words : str):
+async def say(ctx: commands.Context, channel :typing.Optional[discord.TextChannel] = None, *, words : str):
     '''For making the bot come out of the closet for you.
     Format is !say (channelid) (message)'''
-    channel = None
-    if "<#" in channelid: #see if the channel is a channel mention, ie "#but-stuff"
-        channelid = channelid[channelid.find("<#") + len("<#"):] #erase the first bit
-        channelid = channelid[:channelid.find(">")] #erase the last bit
-    channel = client.get_channel(int(channelid))
-    if channel is None: #see if a channel was successfully found
-        print("Inavlid channel")
-        await ctx.send("Inavlid channel")
+    if channel == None:
+        await ctx.send("Invalid channel")
         return
     try:
         await channel.send(str(words))

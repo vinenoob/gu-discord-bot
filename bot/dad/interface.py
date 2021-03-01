@@ -22,19 +22,18 @@ class Dad(commands.Cog):
     @commands.command(name="dadJoke")
     async def dadJoke(self, ctx :commands.context.Context):
         '''Get a dad joke'''
-        async with ctx.typing():
-            await asyncio.sleep(0.75)
+        await ctx.trigger_typing()
         await ctx.send(logic.getDadJoke())
         
 
     @commands.command(name="turnDaddyOn")
     async def turnDaddyOn(self, ctx):
-        '''Get a dad joke'''
+        '''Stops daddy from watching you'''
         logic.turnDaddyOn()
         await ctx.send("Daddy turned on ;)")
     
     @commands.command(name="turnDaddyOff")
     async def turnDaddyOff(self, ctx):
-        '''Get a dad joke'''
+        '''Daddy watches you'''
         logic.turnDaddyOff()
         await ctx.send("Daddy has been forcibly turned off :(")

@@ -9,9 +9,10 @@ daddyOn = True
 #TODO: consider making the dad logic a function for both dad and heck. Dad can handle multiword watches
 
 def daddy(message :str):
+    # message = message.lower()
     if daddyOn:
         for watchWord in toWatch:
-            indx = message.find(watchWord)
+            indx = message.lower().find(watchWord.lower())
             if indx != -1: #if we found the word
                 if message[indx + len(watchWord)] == " ": 
                     #check if the character after the watch word is a space, helping to indicate if it is it's own 
