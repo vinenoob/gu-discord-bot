@@ -3,7 +3,7 @@ import json
 
 #TODO: consider making the dad logic a function for both dad and heck. Dad can handle multiword watches
 
-toWatch = ["heck", "hell", "darn", "david", "heckin", "fack", "scheiss", "fetch", "fetching", "fetchin", "dang", "shrimp"] #all the things to respond to
+toWatch = ["heck", "hell", "darn", "david", "heckin", "fack", "scheiss", "fetch", "fetching", "fetchin", "dang", "shrimp", "johnathan"] #all the things to respond to
 def heckin(message :str):
     holy = ""
     for watch in toWatch: #for each word in our watch list
