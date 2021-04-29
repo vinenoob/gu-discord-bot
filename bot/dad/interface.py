@@ -5,6 +5,17 @@ from discord import message
 from discord.ext.commands.core import command
 import dad.logic as logic
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
+
+class DadSlash(commands.Cog):
+    def __init__(self, bot):
+        print("DadSlash Initiated")
+        self.bot = bot
+
+    @cog_ext.cog_slash(name="dadjoke", description="get a dad joke", guild_ids=[366792929865498634, 160907545018499072])
+    async def _dadjoke(self, ctx: SlashContext):
+        # await ctx.trigger_typing()
+        await ctx.channel.send(logic.getDadJoke())
 
 class Dad(commands.Cog):
     def __init__(self, bot):
