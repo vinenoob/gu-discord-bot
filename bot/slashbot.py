@@ -4,6 +4,8 @@ from discord.ext import commands
 from discord_slash import cog_ext, SlashContext
 from dad import logic
 
+#a test for me
+
 class Slash(commands.Cog):
     def __init__(self, bot):
         print("Slash Initiated")
