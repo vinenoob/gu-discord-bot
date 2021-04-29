@@ -4,6 +4,7 @@ import typing
 import discord
 from discord import guild
 from discord.ext.commands.bot import AutoShardedBot
+from discord.ext.commands.context import Context
 from discord.ext.commands.core import command
 from discord.ext import commands
 from discord.utils import get
@@ -30,8 +31,10 @@ class Voice(commands.Cog):
     async def leave(self, ctx: commands.Context):
         '''Leaves the voice channel the bot is currently in'''
         print(ctx.voice_client)
-        if in_voice(ctx):
+        if in_voice(ctx): 
             await ctx.voice_client.disconnect()
+
+    #TODO: Map out what this stupid module should do
 
     @commands.command(name="speak")
     async def speak(self, ctx: commands.Context, *, whatToSay: str):
@@ -52,12 +55,15 @@ class Voice(commands.Cog):
             await ctx.send("Could not find the specified channel")
 
     @commands.command(name= "stop_repeat")
-    async def stop_repeat(self, ctx: commands.Context):
+    async def stop_repeat(self, ctx: commands.Context, channel: discord.TextChannel = None):
         '''Stops the bot from repeating a text channel'''
+        if channel == None:
+            channel = ctx.channel
+        await channel.send("No longer repeating channel " + self.watch.name)
+        self.watch = None
+        
         if in_voice(ctx):
             await ctx.voice_client.disconnect() #unsure if the disconnect behavior is wanted
-        await ctx.send("No longer repeating channel " + self.watch.name)
-        self.watch = None
 
 
     #TODO: deal with user and channel mentions, along with emojis and web links
@@ -77,10 +83,10 @@ class Voice(commands.Cog):
                     print(error)
     
     # Below is considered for use if we want the bot to clear watch whenever it leaves voice
-    # @commands.Cog.listener()
-    # async def on_voice_state_update(self, member, before, after):
-    #     if member == self.bot.user:
-    #         print("IS BOT")
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
+        if member == self.bot.user and after.channel == None and self.watch != None:
+            await self.stop_repeat(None, self.watch)
         
 
 def in_voice(ctx: commands.Context):
