@@ -22,7 +22,7 @@ import voice.interface
 client = commands.AutoShardedBot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord ')
 slash = SlashCommand(client, override_type=True, sync_commands=True)
 
-client.add_cog(dad.interface.DadSlash(client))
+client.add_cog(dad.interface.Dad(client))
 client.add_cog(cogExample.cogTest.Greetings(client))
 client.add_cog(gameList.interface.GameList(client))
 client.add_cog(cogDice.cogDice.Dice(client))
