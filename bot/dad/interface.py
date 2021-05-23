@@ -15,13 +15,28 @@ class DadSlash(commands.Cog):
     @cog_ext.cog_slash(name="dadjoke", description="get a dad joke", guild_ids=[366792929865498634, 160907545018499072])
     async def _dadjoke(self, ctx: SlashContext):
         # await ctx.trigger_typing()
-        await ctx.channel.send(logic.getDadJoke())
+        await ctx.send(logic.getDadJoke())
 
 class Dad(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.dontWatch = [] #TODO: Implement
         print("Dad Initiated")
+
+    @cog_ext.cog_subcommand(base="daddy", name="dadjoke", description="get a dad joke", guild_ids=[366792929865498634, 160907545018499072])
+    async def _dadjoke(self, ctx: SlashContext):
+        # await ctx.trigger_typing()
+        await ctx.send(logic.getDadJoke())
+
+    @cog_ext.cog_subcommand(base="daddy", name="on", description="turn daddy on", guild_ids=[366792929865498634, 160907545018499072])
+    async def _turnDaddyOn(self, ctx: SlashContext):
+        logic.turnDaddyOn()
+        await ctx.send("Daddy turned on ;)")
+
+    @cog_ext.cog_subcommand(base="daddy", name="off", description="turn daddy off", guild_ids=[366792929865498634, 160907545018499072])
+    async def _turnDaddyOff(self, ctx: SlashContext):
+        logic.turnDaddyOff()
+        await ctx.send("Daddy has been forcibly turned off :(")
 
     @commands.Cog.listener()
     async def on_message(self, message):
