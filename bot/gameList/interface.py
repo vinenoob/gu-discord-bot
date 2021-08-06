@@ -4,7 +4,6 @@ import typing
 import discord
 from discord import User
 from discord.ext import commands
-from discord.ext.commands.converter import Converter, MemberConverter
 from discord.ext.commands.core import command
 from discord_slash import cog_ext, SlashContext
 from discord_slash.model import SlashCommandOptionType
@@ -99,7 +98,7 @@ class GameList(commands.Cog):
         if user1:
             people.append(user1)
         if user2:
-            people.append(user1)
+            people.append(user2)
         if user3:
             people.append(user3)
         if user4:
