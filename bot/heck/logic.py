@@ -41,7 +41,8 @@ def your(message: str):
                     if secondLetterPos == len(yorResponse):
                         secondLetterPos = firstLetterPos - 1
                     yorResponse[firstLetterPos], yorResponse[secondLetterPos] = yorResponse[secondLetterPos], yorResponse[firstLetterPos]
-
+                if word[0].isupper():
+                    yorResponse[0] = yorResponse[0].upper()
                 return True, "".join(yorResponse) + "*"
     return False, ""
 if __name__ == "__main__":
