@@ -13,5 +13,10 @@ class smartBot(commands.Cog):
         command = await self.bot.get_context(message)
         if command.command == None:
             if message.author is not self.bot.user and self.bot.user in message.mentions:
+                messageContent: str = message.content
+                if message.content.find(str(self.bot.user.id)):
+                    messageContent = messageContent.replace(f"<@!{self.bot.user.id}>", "")
+                if messageContent == '':
+                    return
                 async with command.typing():
-                    await message.channel.send(logic.generateOutput(message.content), allowed_mentions=AllowedMentions(users=False))
+                    await message.channel.send(logic.generateOutput(messageContent), allowed_mentions=AllowedMentions(users=False))
