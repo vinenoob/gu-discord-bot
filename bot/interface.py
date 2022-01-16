@@ -1,3 +1,6 @@
+#TODO: migrate to some other library. Pycord? https://zech.codes/moving-on-from-discordpy
+#https://github.com/Pycord-Development/pycord
+
 import typing
 import discord
 import os
