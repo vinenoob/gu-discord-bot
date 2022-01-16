@@ -24,20 +24,17 @@ def addGame(person :str, game :str):
         return (True, "Added " + game)
 
 def removeGame(person :str, gameToRemove :str):
-    found_game = False
     games = getGames(person)
 
     for game in games:
         if game == gameToRemove:
             games.remove(game)
             found_game = True
-            break
-
-    with open(getFileName(person), "w") as gamesFile:
-        for game in games:
-            gamesFile.write(game + "\n")
-
-    return found_game
+            with open(getFileName(person), "w") as gamesFile:
+                for game in games:
+                    gamesFile.write(game + "\n")
+            return True
+    return False
 
 
 def gameList(person :str):

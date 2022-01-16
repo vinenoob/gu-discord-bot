@@ -1,3 +1,6 @@
+#TODO: migrate to some other library. Pycord? https://zech.codes/moving-on-from-discordpy
+#https://github.com/Pycord-Development/pycord
+
 import typing
 import discord
 import os
@@ -7,6 +10,7 @@ from discord.ext import commands
 from discord.utils import sleep_until
 import rng
 from gtts import gTTS
+from discord_slash import SlashCommand, SlashContext
 #import rolling
 import dad.interface
 import cogExample.cogTest
@@ -14,10 +18,15 @@ import gameList.interface
 import cogDice.cogDice
 import heck.interface
 import magic8.interface
+import smartBot.interface
+import slashbot
+
 
 import voice.interface
 client = commands.AutoShardedBot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord ')
+slash = SlashCommand(client, override_type=True, sync_commands=True)
 
+client.add_cog(smartBot.interface.smartBot(client))
 client.add_cog(dad.interface.Dad(client))
 client.add_cog(cogExample.cogTest.Greetings(client))
 client.add_cog(gameList.interface.GameList(client))
@@ -25,6 +34,7 @@ client.add_cog(cogDice.cogDice.Dice(client))
 client.add_cog(heck.interface.Heck(client))
 client.add_cog(magic8.interface.Magic8(client))
 client.add_cog(voice.interface.Voice(client))
+client.add_cog(slashbot.Slash(client))
 
 @client.event
 async def on_ready():
@@ -75,9 +85,16 @@ async def ping(ctx):
     await channel.send("Ow.")
 
 @client.event
-async def on_message(message):
+async def on_message(message: discord.Message):
     print(str(message.channel.id) + ": " + str(message.channel.name) + ": " + str(message.author.name) + ": " + str(message.content)) #print(message) gives lots of useless garbage, now streamlined
-    await client.process_commands(message) #ensure doesn't mess with other commands
+    context = await client.get_context(message)
+    if context.command != None:
+        await client.process_commands(message) #ensure doesn't mess with other commands
+
+# @slash.slash(name="test2", description="non-cog slashing", guild_ids=[366792929865498634])
+# async def _test(ctx: SlashContext):
+#     embed = discord.Embed(title="embed test not!!!")
+#     await ctx.send(content="test", embeds=[embed])
 
 def start_bot():
     key = ""

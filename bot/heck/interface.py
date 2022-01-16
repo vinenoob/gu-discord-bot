@@ -11,9 +11,10 @@ class Heck(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         if not message.author.bot and not message.author.name in self.dontWatch:
-            toHeck = logic.heckin(message.content)
-            if(toHeck[0]):
-                await message.channel.send(toHeck[1])
+            do, response = logic.heckin(message.content)
+            if do:
+                await message.channel.send(response)
 
-
-    
+            do, response = logic.your(message.content)
+            if do:
+                await message.channel.send(response)
