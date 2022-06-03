@@ -1,5 +1,6 @@
 from typing import Tuple
-from urllib import request
+# from urllib import request
+import requests
 import json
 import re
 
@@ -37,9 +38,9 @@ def turnDaddyOff():
     global daddyOn
     daddyOn = False # :(
 
-jokeApi = "https://us-central1-dadsofunny.cloudfunctions.net/DadJokes/random/jokes"
+# jokeApi = "https://us-central1-dadsofunny.cloudfunctions.net/DadJokes/random/jokes"
+jokeApi = "https://icanhazdadjoke.com/"
+
 def getDadJoke():
-    dadJson = json.loads(request.urlopen(jokeApi).read().decode())
-    dadJoke = dadJson['setup'] + "\n"
-    dadJoke += dadJson['punchline']
-    return dadJoke
+    dadJson = json.loads(requests.get(jokeApi, headers={"Accept": "application/json"}).text)
+    return dadJson['joke']

@@ -7,3 +7,4 @@ DONTSHOW
 *.txt
 *.mp3
 bot/slashbot5000.py
+venv
