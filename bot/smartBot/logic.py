@@ -23,8 +23,9 @@ def _getResponse(input: str) -> str:
     return response.choices[0].message.content
 
 def createImage(input: str) -> str:
+    client = openai.OpenAI()
     try:
-        imageResponseJSON: openai = openai.Image.create(
+        imageResponseJSON: openai = client.images.generate(
             prompt= input,
             n=1,
             size="256x256"
