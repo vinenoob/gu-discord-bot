@@ -15,7 +15,7 @@ messages=[]
 
 def _getResponse(input: str) -> str:
     messages.append({"role": "user", "content": f"answer using the previously provided chats: {input}"})
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=messages
             )
