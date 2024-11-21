@@ -20,10 +20,12 @@ import heck.interface
 import magic8.interface
 import smartBot.interface
 import slashbot
-
+import poptarts.interface
 
 import voice.interface
-client = commands.AutoShardedBot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord ')
+
+intents = discord.Intents.all()
+client = commands.AutoShardedBot(command_prefix=commands.when_mentioned_or('?'), description='GU\'s experimental discord ', intents=intents)
 slash = SlashCommand(client, override_type=True, sync_commands=True)
 
 client.add_cog(smartBot.interface.smartBot(client))
@@ -35,6 +37,7 @@ client.add_cog(heck.interface.Heck(client))
 client.add_cog(magic8.interface.Magic8(client))
 client.add_cog(voice.interface.Voice(client))
 client.add_cog(slashbot.Slash(client))
+client.add_cog(poptarts.interface.Poptarts(client))
 
 @client.event
 async def on_ready():
