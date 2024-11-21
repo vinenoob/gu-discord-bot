@@ -23,11 +23,11 @@ class Poptarts(commands.Cog):
         if before.activities[0] != after.activities[0]:
             before_activity = before.activities[0].name if before.activities else None
             after_activity = after.activities[0].name if after.activities else None
-            if before_activity == None or after_activity == None:
-                return
             # check if they both have a number at the beginning
             before_activity_split = before_activity.split(" ")
             after_activity_split = after_activity.split(" ")
+            if len(before_activity_split) == 0 or len(after_activity_split) == 0:
+                return
             if not before_activity_split[0].isnumeric():
                 return
             if not after_activity_split[0].isnumeric():
