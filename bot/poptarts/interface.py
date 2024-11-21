@@ -20,9 +20,12 @@ class Poptarts(commands.Cog):
         if before.id != 287697603607658496 and before.id != 160907412205862913:
             # not ben or jonathan
             return
-        if before.activities[0] != after.activities[0]:
-            before_activity = before.activities[0].name if before.activities else None
-            after_activity = after.activities[0].name if after.activities else None
+        
+        if before.activity == None or after.activity == None:
+            return
+        if before.activity != after.activity:
+            before_activity = before.activity.name if before.activities else None
+            after_activity = after.activity.name if after.activities else None
             # check if they both have a number at the beginning
             before_activity_split = before_activity.split(" ")
             after_activity_split = after_activity.split(" ")
