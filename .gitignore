@@ -8,3 +8,4 @@ DONTSHOW
 *.mp3
 bot/slashbot5000.py
 venv
+.venv

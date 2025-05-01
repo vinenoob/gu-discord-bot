@@ -1,8 +1,5 @@
-from typing import Tuple
-# from urllib import request
 import requests
 import json
-import re
 
 toWatch = ["i am", "i'm", "im", "i be"] #all the things to respond to
 daddyOn = True

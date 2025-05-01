@@ -1,6 +1,4 @@
-from urllib import request
 import random
-import json
 
 #TODO: consider making the dad logic a function for both dad and heck. Dad can handle multiword watches
 

@@ -1,5 +1,4 @@
 from discord.ext import commands
-from discord_slash import cog_ext, SlashContext
 from discord.member import Member
 from discord.ext.commands import AutoShardedBot
 from discord import Activity, ActivityType
@@ -16,7 +15,10 @@ class Poptarts(commands.Cog):
     
     # print when a user is updates their status
     @commands.Cog.listener()
-    async def on_member_update(self, before: Member, after: Member):
+    async def on_presence_update(self, before: Member, after: Member):
+        if before.bot or after.bot:
+            return
+        
         if before.id != 287697603607658496 and before.id != 160907412205862913:
             # not ben or jonathan
             return
