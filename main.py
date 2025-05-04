@@ -44,7 +44,11 @@ async def sync(ctx):
         stuff = await bot.tree.sync(guild=bot_testing_server)
         await ctx.send(f"Synced {len(stuff)} commands")
 
-
+@bot.hybrid_command()
+async def syncall(ctx):
+    if ctx.author.id == my_id:
+        stuff = await bot.tree.sync()
+        await ctx.send(f"Synced {len(stuff)} commands")
 
 async def start_bot():
     key = ""
