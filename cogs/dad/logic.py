@@ -1,7 +1,7 @@
 import requests
 import json
 
-toWatch = ["i am", "i'm", "im", "i be"] #all the things to respond to
+toWatch = ["i am", "i'm", "i’m", "im", "i be"] #all the things to respond to
 daddyOn = True
 
 #TODO: consider making the dad logic a function for both dad and heck. Dad can handle multiword watches
