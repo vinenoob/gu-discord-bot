@@ -32,7 +32,7 @@ async def on_message(message):
 #     print(f"Forum post created: {post.name} in {post.guild.name}")
 #     await post.send("Hello!")
 
-@bot.tree.command(name="say", guilds=[bot_testing_server])
+@bot.tree.command(name="say")
 async def say(interaction: discord.Interaction, channel: discord.TextChannel, message: str):
     """Send a message to a specific channel"""
     await channel.send(message)
@@ -41,8 +41,14 @@ async def say(interaction: discord.Interaction, channel: discord.TextChannel, me
 @bot.hybrid_command()
 async def sync(ctx):
     if ctx.author.id == my_id:
-        stuff = await bot.tree.sync(guild=bot_testing_server)
-        await ctx.send(f"Synced {len(stuff)} commands")
+        try:
+            stuff = await bot.tree.sync(guild=bot_testing_server)
+            await ctx.send(f"Synced {len(stuff)} commands")
+            stuff = await bot.tree.sync(guild=gamers_united_server)
+            await ctx.send(f"Synced {len(stuff)} commands")
+        except Exception as e:
+            print(f"Error during sync: {e}")
+            await ctx.send(f"Error during sync: {e}")
 
 @bot.hybrid_command()
 async def syncall(ctx):

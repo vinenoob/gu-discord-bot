@@ -59,8 +59,11 @@ class VoiceGroup(app_commands.Group):
 
     @app_commands.command(name="join", description="Join your voice channel")
     async def _join(self, interaction: discord.Interaction):
-        await interaction.user.voice.channel.connect()
-        await interaction.response.send_message(f"Joined {interaction.user.voice.channel.name}")
+        try:
+            await interaction.user.voice.channel.connect()
+            await interaction.response.send_message(f"Joined {interaction.user.voice.channel.name}")
+        except Exception as e:
+            await interaction.response.send_message(f"Error joining voice channel: {e}")
 
     @app_commands.command(name="leave", description="Leave voice channel")
     async def _leave(self, interaction: discord.Interaction):

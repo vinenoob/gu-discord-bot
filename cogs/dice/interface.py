@@ -22,7 +22,7 @@ class DiceGroup(app_commands.Group):
         super().__init__(
             name="dice",
             description="Dice commands",
-            guild_ids=[my_discord_object_ids.bot_testing_server_id],
+            guild_ids=[my_discord_object_ids.bot_testing_server_id, my_discord_object_ids.gamers_united_server_id],
         )
         print("DiceGroup initiated")
 

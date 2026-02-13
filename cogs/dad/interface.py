@@ -6,7 +6,7 @@ import my_discord_object_ids
 
 class DadGroup(app_commands.Group):
     def __init__(self):
-        super().__init__(name="daddy", description="Daddy commands", guild_ids=[my_discord_object_ids.bot_testing_server_id])
+        super().__init__(name="daddy", description="Daddy commands", guild_ids=[my_discord_object_ids.bot_testing_server_id, my_discord_object_ids.gamers_united_server_id])
         print("DadGroup Initiated")
     
     @app_commands.command(name="dadjoke", description="get a dad joke")
