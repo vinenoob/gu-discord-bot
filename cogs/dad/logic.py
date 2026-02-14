@@ -9,38 +9,37 @@ daddyOn = True
 
 def daddy(message :str, percentChance :int = 100):
     if not daddyOn:
-        return (False, "")
+        return ""
 
     for watchWord in toWatch:
         indx = message.lower().find(watchWord.lower())
-        if indx == -1: #if we didn't found the word
+        if indx == -1: #if we didn't find the word
             continue
 
-        #check if the character after the watch word is a space, helping to indicate if it is it's own 
-        # word/phrase, and not apart of another word ie "i believe" contains "i be" but we don't want
+        #check if the character after the watch word is a space, helping to indicate if it is its own 
+        # word/phrase, and not part of another word ie "i believe" contains "i be" but we don't want
         # to catch it
         if message[indx + len(watchWord)] != " ": 
             continue
-
 
         name = ""
         found = False
         if indx == 0: 
             #we have found the word and it is the first word in the message
             found = True
-            name = message[indx + len(watchWord) + 1:] # +1     ecasue we want to exclude the space after the watc
+            name = message[indx + len(watchWord) + 1:] # +1 to exclude the space after the watch
         elif message[indx - 1] == " ": #if it is not the first word in the message
-            #we have found the word and the previous character is a space, therefor the word is not just a substring
+            #we have found the word and the previous character is a space, therefore the word is not just a substring
             found = True
-            name = message[indx + len(watchWord) + 1:] # +1 becasue we want to exclude the space after the watch
+            name = message[indx + len(watchWord) + 1:] # +1 to exclude the space after the watch
 
         randomNum = random.randint(0, 100)
         if found and randomNum > percentChance: #if we didn't hit the chance threshold, we won't respond
-            return (False, "")
+            return ""
         
-        return (found, f"Hi {name}, I'm dad!")
+        return f"Hi {name}, I'm dad!"
         
-    return (False, "")
+    return ""
 
 def turnDaddyOn():
     global daddyOn

@@ -33,5 +33,7 @@ class Dad(commands.Cog):
     async def on_message(self, message: discord.Message):
         if not message.author.bot:
             toDad = logic.daddy(message.content, 10) # 10% chance to respond, can be changed in logic.py
-            if(toDad[0]):
-                await message.channel.send(toDad[1])
+            if toDad == "":
+                return
+            
+            await message.channel.send(toDad[1])
