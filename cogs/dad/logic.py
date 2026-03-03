@@ -34,7 +34,7 @@ def daddy(message :str, percentChance :int = 100):
             name = message[indx + len(watchWord) + 1:] # +1 to exclude the space after the watch
 
         randomNum = random.randint(0, 100)
-        if found and randomNum > (100 - percentChance): #if we didn't hit the chance threshold, we won't respond
+        if found and randomNum > percentChance: #if we didn't hit the chance threshold, we won't respond
             return ""
         
         return f"Hi {name}, I'm dad!"
