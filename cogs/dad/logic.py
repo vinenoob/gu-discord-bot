@@ -37,7 +37,7 @@ def daddy(message :str, percentChance :int = 100):
         else:
             return ""
 
-        randomNum = 0
+        randomNum = random.randint(0, 100)
         if found and randomNum > percentChance: #if we didn't hit the chance threshold, we won't respond
             return ""
         
