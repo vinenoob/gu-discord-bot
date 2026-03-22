@@ -7,6 +7,8 @@ daddyOn = True
 
 #TODO: consider making the dad logic a function for both dad and heck. Dad can handle multiword watches
 
+alphanumeric = "123456789abcdefgh"
+
 def daddy(message :str, percentChance :int = 100):
     if not daddyOn:
         return ""
@@ -28,16 +30,18 @@ def daddy(message :str, percentChance :int = 100):
             #we have found the word and it is the first word in the message
             found = True
             name = message[indx + len(watchWord) + 1:] # +1 to exclude the space after the watch
-        elif message[indx - 1] == " ": #if it is not the first word in the message
+        elif not message[indx - 1].isalnum(): #we need to see if it's a false flag or not, such as the "im" in "him"
             #we have found the word and the previous character is a space, therefore the word is not just a substring
             found = True
             name = message[indx + len(watchWord) + 1:] # +1 to exclude the space after the watch
+        else:
+            return ""
 
-        randomNum = random.randint(0, 100)
+        randomNum = 0
         if found and randomNum > percentChance: #if we didn't hit the chance threshold, we won't respond
             return ""
         
-        return f"Hi {name}, I'm dad!"
+        return f"Hi {name}, I'm dad! (debug)"
         
     return ""
 
