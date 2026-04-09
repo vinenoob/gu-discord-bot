@@ -26,7 +26,7 @@ def daddy(message :str, percentChance :int = 100):
     if randomNum > percentChance:
         return ""
 
-    return f"Hi {name}, I’m dad! (debug)"
+    return f"Hi {name}, I’m dad!"
 
 def turnDaddyOn():
     global daddyOn
