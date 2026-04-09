@@ -1,11 +1,10 @@
 import requests
 import json
 import random
+from watch_utils import find_watch_word
 
-toWatch = ["i am", "i'm", "i’m", "im", "i be"] #all the things to respond to
+toWatch = ["i am", "i’m", "i’m", "im", "i be"] #all the things to respond to
 daddyOn = True
-
-#TODO: consider making the dad logic a function for both dad and heck. Dad can handle multiword watches
 
 alphanumeric = "123456789abcdefgh"
 
@@ -13,37 +12,21 @@ def daddy(message :str, percentChance :int = 100):
     if not daddyOn:
         return ""
 
-    for watchWord in toWatch:
-        indx = message.lower().find(watchWord.lower())
-        if indx == -1: #if we didn't find the word
-            continue
+    indx, watch = find_watch_word(message, toWatch)
+    if indx == -1:
+        return ""
 
-        #check if the character after the watch word is a space, helping to indicate if it is its own 
-        # word/phrase, and not part of another word ie "i believe" contains "i be" but we don't want
-        # to catch it
-        if message[indx + len(watchWord)] != " ": 
-            continue
+    end_pos = indx + len(watch)
+    # must be followed by a space and a name
+    if end_pos >= len(message) or message[end_pos] != " ":
+        return ""
 
-        name = ""
-        found = False
-        if indx == 0: 
-            #we have found the word and it is the first word in the message
-            found = True
-            name = message[indx + len(watchWord) + 1:] # +1 to exclude the space after the watch
-        elif not message[indx - 1].isalnum(): #we need to see if it's a false flag or not, such as the "im" in "him"
-            #we have found the word and the previous character is a space, therefore the word is not just a substring
-            found = True
-            name = message[indx + len(watchWord) + 1:] # +1 to exclude the space after the watch
-        else:
-            return ""
+    name = message[end_pos + 1:]
+    randomNum = random.randint(0, 100)
+    if randomNum > percentChance:
+        return ""
 
-        randomNum = random.randint(0, 100)
-        if found and randomNum > percentChance: #if we didn't hit the chance threshold, we won't respond
-            return ""
-        
-        return f"Hi {name}, I'm dad! (debug)"
-        
-    return ""
+    return f"Hi {name}, I’m dad! (debug)"
 
 def turnDaddyOn():
     global daddyOn

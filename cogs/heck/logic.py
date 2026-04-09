@@ -1,16 +1,12 @@
 import random
-
-#TODO: consider making the dad logic a function for both dad and heck. Dad can handle multiword watches
+from watch_utils import find_watch_word
 
 HECK_LIST = ["heck", "hell", "darn", "david", "heckin", "fack", "scheiss", "fetch", "fetching", "fetchin", "dang", "shrimp", "johnathan"] #all the things to respond to
 def heckin(message: str):
-    holy = ""
-    for watch in HECK_LIST: #for each word in our watch list
-        for word in message.split():
-            if watch == word.lower(): #if we find what we are looking for
-                holy = "Not in my christian minecraft server :sunglasses: "
-                return True, holy
-    return False, holy
+    indx, _ = find_watch_word(message, HECK_LIST)
+    if indx != -1:
+        return True, "Not in my christian minecraft server :sunglasses: "
+    return False, ""
 
 YOUR_SPELLINGS = ["your", "youre"]
 YOUR_LIST = ["your", "you're"]
