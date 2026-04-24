@@ -1,7 +1,7 @@
 import random
 from watch_utils import find_watch_word
 
-HECK_LIST = ["heck", "hell", "darn", "david", "heckin", "fack", "scheiss", "fetch", "fetching", "fetchin", "dang", "shrimp", "johnathan", "livvy"] #all the things to respond to
+HECK_LIST = ["heck", "hell", "darn", "david", "heckin", "fack", "scheiss", "fetch", "fetching", "fetchin", "dang", "shrimp", "johnathan", "livvy", "bathroom"] #all the things to respond to
 def heckin(message: str):
     indx, _ = find_watch_word(message, HECK_LIST)
     if indx != -1:
