@@ -1,0 +1,41 @@
+name: Deploy to Raspberry Pi
+
+# Auto-deploy on every push to master. The job runs on the self-hosted runner
+# on the Pi, so it can update the live clone and restart the systemd service.
+on:
+  push:
+    branches: [master]
+
+# Never run two deploys at once; if a newer push lands mid-deploy, cancel the
+# older one so the Pi always ends up on the latest commit.
+concurrency:
+  group: pi-deploy
+  cancel-in-progress: true
+
+env:
+  # Path to the bot's clone on the Pi. Change this if you cloned elsewhere.
+  BOT_DIR: /home/pi/gu-discord-bot
+  SERVICE: gu-bot
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Pull latest, update deps if needed, restart
+        run: |
+          set -euo pipefail
+          cd "$BOT_DIR"
+
+          BEFORE=$(git rev-parse HEAD)
+          git fetch --quiet origin master
+          git reset --hard origin/master
+
+          # Reinstall dependencies only when requirements.txt actually changed,
+          # so most deploys are fast.
+          if ! git diff --quiet "$BEFORE" HEAD -- requirements.txt; then
+            echo "requirements.txt changed — updating virtualenv"
+            ./.venv/bin/pip install -r requirements.txt
+          fi
+
+          sudo systemctl restart "$SERVICE.service"
+          echo "Deployed $(git rev-parse --short HEAD) and restarted $SERVICE."
