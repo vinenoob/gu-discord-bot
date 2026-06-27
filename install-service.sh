@@ -62,6 +62,9 @@ Wants=network-online.target
 Type=simple
 User=$RUN_USER
 WorkingDirectory=$REPO_DIR
+# Unbuffered stdout/stderr so the bot's print() output shows up in journalctl
+# in real time instead of being held in Python's buffer.
+Environment=PYTHONUNBUFFERED=1
 ExecStart=$PYTHON_BIN main.py
 Restart=on-failure
 RestartSec=5
@@ -87,7 +90,10 @@ fi
 # --- Enable + start ---------------------------------------------------------
 echo ">> Reloading systemd and starting the service..."
 "$SYSTEMCTL" daemon-reload
-"$SYSTEMCTL" enable --now "${SERVICE_NAME}.service"
+"$SYSTEMCTL" enable "${SERVICE_NAME}.service"
+# Use restart (not 'enable --now') so re-running this script applies unit changes
+# even when the service is already running.
+"$SYSTEMCTL" restart "${SERVICE_NAME}.service"
 
 echo
 echo ">> Service installed and running. Useful commands:"
