@@ -44,7 +44,6 @@ def your(message: str):
 isThisTrueWatchlist = ["true", "real", "what do you think", "false", "verify", "correct"]
 # response -> weight (higher weight = picked more often)
 responses = {
-    "testing yet again": 10000,
     "yeah": 10,
     "nah": 2,
     "Here is a useful resource: https://www.google.com": 1,
