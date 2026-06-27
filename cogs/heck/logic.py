@@ -45,7 +45,7 @@ isThisTrueWatchlist = ["true", "real", "what do you think", "false", "verify", "
 # response -> weight (higher weight = picked more often)
 responses = {
     "yeah": 10,
-    "nah": 10,
+    "nah": 2,
     "Here is a useful resource: https://www.google.com": 1,
     "*censored*": 1,
     "ask grok": 1,
