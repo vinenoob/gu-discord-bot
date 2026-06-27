@@ -21,4 +21,4 @@ class Heck(commands.Cog):
             if message.type == discord.MessageType.reply:
                 do, response = logic.isThisTrue(message.content)
                 if do:
-                    await message.channel.send(response)
+                    await message.reply(response)
