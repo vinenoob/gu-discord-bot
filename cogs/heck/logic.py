@@ -40,6 +40,31 @@ def your(message: str):
                 yorResponse[0] = yorResponse[0].upper()
             return True, "".join(yorResponse) + "*"
     return False, ""
+
+isThisTrueWatchlist = ["true", "real", "what do you think", "false", "verify", "correct"]
+# response -> weight (higher weight = picked more often)
+responses = {
+    "yeah": 10,
+    "nah": 10,
+    "Here is a useful resource: https://www.google.com": 1,
+    "*censored*": 1,
+    "ask grok": 1,
+    "I'm not allowed to teach you how to make drugs": 1,
+}
+
+def isThisTrue(message: str):
+    isMatch = False
+    for word in isThisTrueWatchlist:
+        if word in message.lower():
+            isMatch = True
+            break
+    if not isMatch:
+        return False, ""
+
+    response = random.choices(list(responses.keys()), weights=list(responses.values()))[0]
+    return True, response
+
+
 if __name__ == "__main__":
     for i in range(100):
         print(your("your"))
