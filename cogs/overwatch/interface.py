@@ -13,6 +13,7 @@ class Overwatch(commands.Cog):
         print("Overwatch Cog loaded.")
 
 
+@app_commands.default_permissions(move_members=True)
 class OverwatchGroup(app_commands.Group):
     """Group of commands for Overwatch."""
 
@@ -24,12 +25,20 @@ class OverwatchGroup(app_commands.Group):
         )
         print("OverwatchGroup initiated")
 
+    async def on_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
+        if isinstance(error, app_commands.MissingPermissions):
+            await interaction.response.send_message("You need the Move Members permission to use this", ephemeral=True)
+            return
+        raise error
+
     @app_commands.command(name="move", description="Move everyone from one voice channel to another")
+    @app_commands.checks.has_permissions(move_members=True)
     async def move(self, interaction: discord.Interaction, from_channel: discord.VoiceChannel, to_channel: discord.VoiceChannel):
         """Move everyone from one voice channel to another."""
         await move_members(interaction, from_channel, to_channel)
 
     @app_commands.command(name="movehere", description="Move everyone from a voice channel to your voice channel")
+    @app_commands.checks.has_permissions(move_members=True)
     async def movehere(self, interaction: discord.Interaction, from_channel: discord.VoiceChannel):
         """Move everyone from a voice channel to the author's voice channel."""
         voice = interaction.user.voice if isinstance(interaction.user, discord.Member) else None
