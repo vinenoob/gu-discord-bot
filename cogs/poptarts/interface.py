@@ -1,10 +1,9 @@
 from discord.ext import commands
 from discord.member import Member
-from discord.ext.commands import AutoShardedBot
 from discord import Activity, ActivityType
 
 class Poptarts(commands.Cog):
-    def __init__(self, bot: AutoShardedBot):
+    def __init__(self, bot):
         self.bot = bot
         print("Poptarts Initiated")
 
@@ -28,6 +27,8 @@ class Poptarts(commands.Cog):
         if before.activity != after.activity:
             before_activity = before.activity.name if before.activities else None
             after_activity = after.activity.name if after.activities else None
+            if before_activity == None or after_activity == None:
+                return
             # check if they both have a number at the beginning
             before_activity_split = before_activity.split(" ")
             after_activity_split = after_activity.split(" ")
