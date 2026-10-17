@@ -29,9 +29,19 @@ fi
 # curl:   needed to install uv.
 # ffmpeg: needed by the voice / gTTS features at runtime.
 if command -v apt-get >/dev/null 2>&1; then
-  echo ">> Installing system packages (curl, ffmpeg)..."
-  sudo apt-get update -qq
-  sudo apt-get install -y curl ffmpeg
+  # Only install what's missing, so we don't try to upgrade packages that are
+  # already present (which fails on EOL releases whose repos have moved).
+  MISSING=()
+  for pkg in curl ffmpeg; do
+    dpkg -s "$pkg" >/dev/null 2>&1 || MISSING+=("$pkg")
+  done
+  if [ ${#MISSING[@]} -gt 0 ]; then
+    echo ">> Installing system packages (${MISSING[*]})..."
+    sudo apt-get update -qq
+    sudo apt-get install -y "${MISSING[@]}"
+  else
+    echo ">> System packages already installed (curl, ffmpeg)."
+  fi
 else
   echo ">> Non-Debian system: please ensure curl and ffmpeg are installed."
 fi
