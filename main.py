@@ -77,6 +77,8 @@ async def start_bot():
         await bot.add_cog(cogs.voice.interface.Voice(bot))
         import cogs.dice.interface
         await bot.add_cog(cogs.dice.interface.Dice(bot))
+        import cogs.overwatch.interface
+        await bot.add_cog(cogs.overwatch.interface.Overwatch(bot))
         # await bot.load_extension("cogs.dad.interface")
         await bot.start(key)
 
