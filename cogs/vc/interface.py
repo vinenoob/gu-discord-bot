@@ -4,26 +4,26 @@ import discord
 import my_discord_object_ids
 
 
-class Overwatch(commands.Cog):
-    """Cog for Overwatch commands."""
+class Vc(commands.Cog):
+    """Cog for voice channel commands."""
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        bot.tree.add_command(OverwatchGroup())
-        print("Overwatch Cog loaded.")
+        bot.tree.add_command(VcGroup())
+        print("Vc Cog loaded.")
 
 
 @app_commands.default_permissions(move_members=True)
-class OverwatchGroup(app_commands.Group):
-    """Group of commands for Overwatch."""
+class VcGroup(app_commands.Group):
+    """Group of voice channel commands."""
 
     def __init__(self):
         super().__init__(
-            name="overwatch",
-            description="Overwatch commands",
+            name="vc",
+            description="Voice channel commands",
             guild_ids=[my_discord_object_ids.bot_testing_server_id, my_discord_object_ids.gamers_united_server_id],
         )
-        print("OverwatchGroup initiated")
+        print("VcGroup initiated")
 
     async def on_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
         if isinstance(error, app_commands.MissingPermissions):
