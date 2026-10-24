@@ -1,6 +1,6 @@
 # Guess Who
 
-Status: idea only. Nothing has been built yet.
+Status: first version in `interface.py`. Start a round with `/guesswho play`.
 
 ## Concept
 

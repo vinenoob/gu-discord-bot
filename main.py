@@ -79,6 +79,8 @@ async def start_bot():
         await bot.add_cog(cogs.dice.interface.Dice(bot))
         import cogs.vc.interface
         await bot.add_cog(cogs.vc.interface.Vc(bot))
+        import cogs.guess_who.interface
+        await bot.add_cog(cogs.guess_who.interface.GuessWho(bot))
         # await bot.load_extension("cogs.dad.interface")
         await bot.start(key)
 
