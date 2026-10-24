@@ -73,6 +73,7 @@ class GuessView(discord.ui.View):
         await self.message.edit(
             content=f"{self.question}\n\nIt was **{self.author.display_name}**! {summary}",
             view=self,
+            allowed_mentions=discord.AllowedMentions.none(),
         )
 
 
