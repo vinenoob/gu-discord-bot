@@ -96,7 +96,7 @@ class GuessWhoGroup(app_commands.Group):
         seconds="How long players have to guess (default 30)",
         choices="How many names to pick from (default 5)",
         history="How many recent messages to pick from (default 500)",
-        channel="Channel to pull the message from (default this channel)",
+        channel="Channel, thread or forum post to pull the message from (default this channel)",
         images="Include messages with images (default off)",
     )
     async def play(
@@ -106,7 +106,8 @@ class GuessWhoGroup(app_commands.Group):
         seconds: app_commands.Range[int, 10, 300] = 30,
         choices: app_commands.Range[int, 2, 25] = 5,
         history: app_commands.Range[int, 100, 2000] = 500,
-        channel: discord.TextChannel | None = None,
+        # Forum posts are threads, so this covers them too
+        channel: discord.TextChannel | discord.Thread | None = None,
         images: bool = False,
     ):
         source = channel or interaction.channel
@@ -115,6 +116,10 @@ class GuessWhoGroup(app_commands.Group):
             return
         # Don't let people pull messages from channels they can't read themselves
         if channel is not None:
+            # Thread permissions come from the parent channel, which doesn't prove they're in a private thread
+            if isinstance(channel, discord.Thread) and channel.is_private():
+                await interaction.response.send_message("Private threads can't be used.", ephemeral=True)
+                return
             if not isinstance(interaction.user, discord.Member) or not channel.permissions_for(interaction.user).read_message_history:
                 await interaction.response.send_message("You can't read messages in that channel.", ephemeral=True)
                 return
