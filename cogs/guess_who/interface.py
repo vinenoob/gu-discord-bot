@@ -7,6 +7,18 @@ from discord import app_commands
 import my_discord_object_ids
 
 
+IMAGE_EXTENSIONS = (".png", ".jpg", ".jpeg", ".gif", ".webp")
+
+
+def image_url(message: discord.Message) -> str | None:
+    '''URL of the first image attached to the message, if any'''
+    for attachment in message.attachments:
+        # Older attachments may not have a content type, fall back to the file extension
+        if (attachment.content_type or "").startswith("image/") or attachment.filename.lower().endswith(IMAGE_EXTENSIONS):
+            return attachment.url
+    return None
+
+
 class GuessButton(discord.ui.Button):
     def __init__(self, member: discord.User | discord.Member):
         super().__init__(label=member.display_name[:80], style=discord.ButtonStyle.primary)
@@ -85,6 +97,7 @@ class GuessWhoGroup(app_commands.Group):
         choices="How many names to pick from (default 5)",
         history="How many recent messages to pick from (default 500)",
         channel="Channel to pull the message from (default this channel)",
+        images="Include messages with images (default off)",
     )
     async def play(
         self,
@@ -94,6 +107,7 @@ class GuessWhoGroup(app_commands.Group):
         choices: app_commands.Range[int, 2, 25] = 5,
         history: app_commands.Range[int, 100, 2000] = 500,
         channel: discord.TextChannel | None = None,
+        images: bool = False,
     ):
         source = channel or interaction.channel
         if not isinstance(source, discord.abc.Messageable):
@@ -106,12 +120,13 @@ class GuessWhoGroup(app_commands.Group):
                 return
         # Reading history can take longer than the 3 second slash command limit
         await interaction.response.defer()
-        # Pick a random human message with some text from recent channel history
+        # Pick a random human message with some text (or an image, if allowed) from recent channel history
         history_start = time.perf_counter()
         fetched = [m async for m in source.history(limit=history)]
         history_seconds = time.perf_counter() - history_start
         messages = [m for m in fetched
-                    if not m.author.bot and len(m.content) > 10 and not m.content.startswith("!")]
+                    if not m.author.bot and not m.content.startswith("!")
+                    and (len(m.content) > 10 or (images and image_url(m)))]
         print(f"GuessWho: fetched {len(fetched)} messages in {history_seconds:.2f}s, {len(messages)} usable")
         if not messages:
             await interaction.followup.send("Couldn't find any messages to use.")
@@ -124,7 +139,14 @@ class GuessWhoGroup(app_commands.Group):
         options = random.sample(others, min(choices - 1, len(others))) + [author]
         random.shuffle(options)
 
-        question = f"Who said this?\n> {picked.content}"
+        question = "Who said this?"
+        if picked.content:
+            # Quote every line, "> " only covers the line it's on
+            question += "\n" + "\n".join(f"> {line}" for line in picked.content.splitlines())
+        url = image_url(picked) if images else None
+        if url:
+            # Discord shows the image under the message from the bare link
+            question += f"\n{url}"
         view = GuessView(question, author, options)
         # Discord renders this as a live "in X seconds" countdown on each viewer's client
         ends = int(time.time()) + seconds
