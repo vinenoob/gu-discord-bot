@@ -37,11 +37,12 @@ class GuessButton(discord.ui.Button):
 
 
 class GuessView(discord.ui.View):
-    def __init__(self, question: str, author: discord.User | discord.Member, choices: list[discord.User | discord.Member]):
+    def __init__(self, question: str, author: discord.User | discord.Member, choices: list[discord.User | discord.Member], jump_url: str):
         # No view timeout: it resets on every click, so the command ends the round itself with end_round()
         super().__init__(timeout=None)
         self.question = question
         self.author = author
+        self.jump_url = jump_url  # link to the original message, shown once the answer is revealed
         self.guesses: dict[int, int] = {}  # guesser id -> guessed member id
         self.guess_times: dict[int, float] = {}  # guesser id -> seconds after the round started
         self.started_at = time.perf_counter()
@@ -71,7 +72,7 @@ class GuessView(discord.ui.View):
         if self.message is None:
             return
         await self.message.edit(
-            content=f"{self.question}\n\nIt was **{self.author.display_name}**! {summary}",
+            content=f"{self.question}\n\nIt was **{self.author.display_name}**! {summary}\n[Original message]({self.jump_url})",
             view=self,
             allowed_mentions=discord.AllowedMentions.none(),
         )
@@ -153,7 +154,7 @@ class GuessWhoGroup(app_commands.Group):
         if url:
             # Discord shows the image under the message from the bare link
             question += f"\n{url}"
-        view = GuessView(question, author, options)
+        view = GuessView(question, author, options, picked.jump_url)
         # Discord renders this as a live "in X seconds" countdown on each viewer's client
         ends = int(time.time()) + seconds
         # The quoted message may contain mentions, don't ping anyone with them
