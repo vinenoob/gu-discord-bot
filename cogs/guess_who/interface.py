@@ -10,6 +10,9 @@ import my_discord_object_ids
 IMAGE_EXTENSIONS = (".png", ".jpg", ".jpeg", ".gif", ".webp")
 # How long fetched channel history is reused before it's fetched again
 CACHE_SECONDS = 10 * 60
+# Channels with message history and an id to cache it under (plain Messageable has no id)
+HistorySource = (discord.TextChannel | discord.Thread | discord.VoiceChannel | discord.StageChannel
+                 | discord.DMChannel | discord.GroupChannel | discord.PartialMessageable)
 
 
 def image_url(message: discord.Message) -> str | None:
@@ -97,6 +100,16 @@ class GuessWhoGroup(app_commands.Group):
         # channel id -> (time fetched, history count fetched, messages newest first)
         self.history_cache: dict[int, tuple[float, int, list[discord.Message]]] = {}
 
+    async def get_history(self, source: HistorySource, limit: int) -> tuple[list[discord.Message], bool]:
+        '''The newest `limit` messages in the channel, and whether they came from the cache'''
+        cached = self.history_cache.get(source.id)
+        # A bigger fetch covers a smaller one, history comes newest first so slicing keeps the most recent messages
+        if cached and time.time() - cached[0] < CACHE_SECONDS and cached[1] >= limit:
+            return cached[2][:limit], True
+        messages = [m async for m in source.history(limit=limit)]
+        self.history_cache[source.id] = (time.time(), limit, messages)
+        return messages, False
+
     @app_commands.command(name="play", description="Guess who sent a random message")
     @app_commands.describe(
         seconds="How long players have to guess (default 30)",
@@ -132,17 +145,10 @@ class GuessWhoGroup(app_commands.Group):
         # Reading history can take longer than the 3 second slash command limit
         await interaction.response.defer()
         # Pick a random human message with some text (or an image, if allowed) from recent channel history
-        cached = self.history_cache.get(source.id)
         history_start = time.perf_counter()
-        # A bigger fetch covers a smaller one, history comes newest first so slicing keeps the most recent messages
-        if cached and time.time() - cached[0] < CACHE_SECONDS and cached[1] >= history:
-            fetched = cached[2][:history]
-            how = "from cache"
-        else:
-            fetched = [m async for m in source.history(limit=history)]
-            self.history_cache[source.id] = (time.time(), history, fetched)
-            how = "from Discord"
+        fetched, from_cache = await self.get_history(source, history)
         history_seconds = time.perf_counter() - history_start
+        how = "from cache" if from_cache else "from Discord"
         messages = [m for m in fetched
                     if not m.author.bot and not m.content.startswith("!")
                     and (len(m.content) > 10 or (images and image_url(m)))]
