@@ -103,12 +103,22 @@ class GuessWhoGroup(app_commands.Group):
     async def get_history(self, source: HistorySource, limit: int) -> tuple[list[discord.Message], bool]:
         '''The newest `limit` messages in the channel, and whether they came from the cache'''
         cached = self.history_cache.get(source.id)
-        # A bigger fetch covers a smaller one, history comes newest first so slicing keeps the most recent messages
-        if cached and time.time() - cached[0] < CACHE_SECONDS and cached[1] >= limit:
-            return cached[2][:limit], True
+        if cached is None:
+            return await self.fetch_history(source, limit), False
+        fetched_at, fetched_limit, messages = cached
+        if time.time() - fetched_at >= CACHE_SECONDS:
+            return await self.fetch_history(source, limit), False
+        # A smaller fetch can't cover a bigger one
+        if fetched_limit < limit:
+            return await self.fetch_history(source, limit), False
+        # History comes newest first, so slicing keeps the most recent messages
+        return messages[:limit], True
+
+    async def fetch_history(self, source: HistorySource, limit: int) -> list[discord.Message]:
+        '''Fetch the newest `limit` messages from Discord and cache them'''
         messages = [m async for m in source.history(limit=limit)]
         self.history_cache[source.id] = (time.time(), limit, messages)
-        return messages, False
+        return messages
 
     @app_commands.command(name="play", description="Guess who sent a random message")
     @app_commands.describe(
@@ -134,7 +144,7 @@ class GuessWhoGroup(app_commands.Group):
             await interaction.response.send_message("I can't read messages in this channel.", ephemeral=True)
             return
         # Don't let people pull messages from channels they can't read themselves
-        if channel is not None:
+        if channel:
             # Thread permissions come from the parent channel, which doesn't prove they're in a private thread
             if isinstance(channel, discord.Thread) and channel.is_private():
                 await interaction.response.send_message("Private threads can't be used.", ephemeral=True)
