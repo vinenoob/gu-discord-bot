@@ -158,7 +158,8 @@ class GuessWhoGroup(app_commands.Group):
         options = random.sample(others, min(choices - 1, len(others))) + [author]
         random.shuffle(options)
 
-        question = "Who said this?"
+        # Channel mentions render as a clickable #name and never ping anyone
+        question = f"Who said this in <#{picked.channel.id}>?"
         if picked.content:
             # Quote every line, "> " only covers the line it's on
             question += "\n" + "\n".join(f"> {line}" for line in picked.content.splitlines())
