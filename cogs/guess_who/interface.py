@@ -8,6 +8,8 @@ import my_discord_object_ids
 
 
 IMAGE_EXTENSIONS = (".png", ".jpg", ".jpeg", ".gif", ".webp")
+# How long fetched channel history is reused before it's fetched again
+CACHE_SECONDS = 10 * 60
 
 
 def image_url(message: discord.Message) -> str | None:
@@ -92,6 +94,8 @@ class GuessWhoGroup(app_commands.Group):
             description="Guess who sent a message",
             guild_ids=[my_discord_object_ids.bot_testing_server_id, my_discord_object_ids.gamers_united_server_id],
         )
+        # (channel id, history count) -> (time fetched, messages)
+        self.history_cache: dict[tuple[int, int], tuple[float, list[discord.Message]]] = {}
 
     @app_commands.command(name="play", description="Guess who sent a random message")
     @app_commands.describe(
@@ -128,13 +132,21 @@ class GuessWhoGroup(app_commands.Group):
         # Reading history can take longer than the 3 second slash command limit
         await interaction.response.defer()
         # Pick a random human message with some text (or an image, if allowed) from recent channel history
+        key = (source.id, history)
+        cached = self.history_cache.get(key)
         history_start = time.perf_counter()
-        fetched = [m async for m in source.history(limit=history)]
+        if cached and time.time() - cached[0] < CACHE_SECONDS:
+            fetched = cached[1]
+            how = "from cache"
+        else:
+            fetched = [m async for m in source.history(limit=history)]
+            self.history_cache[key] = (time.time(), fetched)
+            how = "from Discord"
         history_seconds = time.perf_counter() - history_start
         messages = [m for m in fetched
                     if not m.author.bot and not m.content.startswith("!")
                     and (len(m.content) > 10 or (images and image_url(m)))]
-        print(f"GuessWho: fetched {len(fetched)} messages in {history_seconds:.2f}s, {len(messages)} usable")
+        print(f"GuessWho: got {len(fetched)} messages {how} in {history_seconds:.2f}s, {len(messages)} usable")
         if not messages:
             await interaction.followup.send("Couldn't find any messages to use.")
             return
