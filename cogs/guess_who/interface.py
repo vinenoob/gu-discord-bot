@@ -8,6 +8,8 @@ import my_discord_object_ids
 
 
 IMAGE_EXTENSIONS = (".png", ".jpg", ".jpeg", ".gif", ".webp")
+# Text this many characters or shorter is too little to guess from
+MIN_MESSAGE_LENGTH = 10
 # How long fetched channel history is reused before it's fetched again
 CACHE_SECONDS = 10 * 60
 # Channels with message history and an id to cache it under (plain Messageable has no id)
@@ -22,6 +24,18 @@ def image_url(message: discord.Message) -> str | None:
         if (attachment.content_type or "").startswith("image/") or attachment.filename.lower().endswith(IMAGE_EXTENSIONS):
             return attachment.url
     return None
+
+
+def is_usable(message: discord.Message, allow_images: bool) -> bool:
+    '''Whether the message is a human's, not a bot command, with enough text (or an image, if allowed) to guess from'''
+    if message.author.bot:
+        return False
+    # Short messages are only usable for their image
+    has_image = allow_images and image_url(message) is not None
+    if not has_image:
+        if len(message.content) <= MIN_MESSAGE_LENGTH:
+            return False
+    return True
 
 
 class GuessButton(discord.ui.Button):
@@ -143,11 +157,9 @@ class GuessWhoGroup(app_commands.Group):
                 return
         # Reading history can take longer than the 3 second slash command limit
         await interaction.response.defer()
-        # Pick a random human message with some text (or an image, if allowed) from recent channel history
+        # Pick a random usable message from recent channel history
         fetched = await self.get_history(source, history)
-        messages = [m for m in fetched
-                    if not m.author.bot and not m.content.startswith("!")
-                    and (len(m.content) > 10 or (images and image_url(m)))]
+        messages = [m for m in fetched if is_usable(m, images)]
         print(f"GuessWho: {len(messages)} of {len(fetched)} messages usable")
         if not messages:
             await interaction.followup.send("Couldn't find any messages to use.")
