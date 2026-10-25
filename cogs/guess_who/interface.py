@@ -38,6 +38,19 @@ def is_usable(message: discord.Message, allow_images: bool) -> bool:
     return True
 
 
+def channel_error(channel: discord.TextChannel | discord.VoiceChannel | discord.Thread | None, user: discord.User | discord.Member) -> str | None:
+    '''Why the user can't pull messages from the channel they picked, or None if they can'''
+    # No channel picked means the one the command was run in, which they can already read
+    if channel is None:
+        return None
+    # Thread permissions come from the parent channel, which doesn't prove they're in a private thread
+    if isinstance(channel, discord.Thread) and channel.is_private():
+        return "Private threads can't be used."
+    if not isinstance(user, discord.Member) or not channel.permissions_for(user).read_message_history:
+        return "You can't read messages in that channel."
+    return None
+
+
 class GuessButton(discord.ui.Button):
     def __init__(self, member: discord.User | discord.Member):
         super().__init__(label=member.display_name[:80], style=discord.ButtonStyle.primary)
@@ -147,14 +160,10 @@ class GuessWhoGroup(app_commands.Group):
             await interaction.response.send_message("I can't read messages in this channel.", ephemeral=True)
             return
         # Don't let people pull messages from channels they can't read themselves
-        if channel:
-            # Thread permissions come from the parent channel, which doesn't prove they're in a private thread
-            if isinstance(channel, discord.Thread) and channel.is_private():
-                await interaction.response.send_message("Private threads can't be used.", ephemeral=True)
-                return
-            if not isinstance(interaction.user, discord.Member) or not channel.permissions_for(interaction.user).read_message_history:
-                await interaction.response.send_message("You can't read messages in that channel.", ephemeral=True)
-                return
+        error = channel_error(channel, interaction.user)
+        if error:
+            await interaction.response.send_message(error, ephemeral=True)
+            return
         # Reading history can take longer than the 3 second slash command limit
         await interaction.response.defer()
         # Pick a random usable message from recent channel history
