@@ -94,8 +94,8 @@ class GuessWhoGroup(app_commands.Group):
             description="Guess who sent a message",
             guild_ids=[my_discord_object_ids.bot_testing_server_id, my_discord_object_ids.gamers_united_server_id],
         )
-        # (channel id, history count) -> (time fetched, messages)
-        self.history_cache: dict[tuple[int, int], tuple[float, list[discord.Message]]] = {}
+        # channel id -> (time fetched, history count fetched, messages newest first)
+        self.history_cache: dict[int, tuple[float, int, list[discord.Message]]] = {}
 
     @app_commands.command(name="play", description="Guess who sent a random message")
     @app_commands.describe(
@@ -132,15 +132,15 @@ class GuessWhoGroup(app_commands.Group):
         # Reading history can take longer than the 3 second slash command limit
         await interaction.response.defer()
         # Pick a random human message with some text (or an image, if allowed) from recent channel history
-        key = (source.id, history)
-        cached = self.history_cache.get(key)
+        cached = self.history_cache.get(source.id)
         history_start = time.perf_counter()
-        if cached and time.time() - cached[0] < CACHE_SECONDS:
-            fetched = cached[1]
+        # A bigger fetch covers a smaller one, history comes newest first so slicing keeps the most recent messages
+        if cached and time.time() - cached[0] < CACHE_SECONDS and cached[1] >= history:
+            fetched = cached[2][:history]
             how = "from cache"
         else:
             fetched = [m async for m in source.history(limit=history)]
-            self.history_cache[key] = (time.time(), fetched)
+            self.history_cache[source.id] = (time.time(), history, fetched)
             how = "from Discord"
         history_seconds = time.perf_counter() - history_start
         messages = [m for m in fetched
