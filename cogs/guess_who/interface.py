@@ -177,8 +177,12 @@ class GuessWhoGroup(app_commands.Group):
         author = picked.author
 
         # Real author plus other people up to the requested count, shuffled
-        others = list({m.author.id: m.author for m in messages if m.author.id != author.id}.values())
-        options = random.sample(others, min(choices - 1, len(others))) + [author]
+        # Others appear once per message, so after shuffling, people who send more messages tend to come first
+        others = [m.author for m in messages if m.author.id != author.id]
+        random.shuffle(others)
+        # Keep each person's first appearance so nobody is an option twice
+        unique_others = list({person.id: person for person in others}.values())
+        options = unique_others[:choices - 1] + [author]
         random.shuffle(options)
 
         # Channel mentions render as a clickable #name and never ping anyone
