@@ -36,26 +36,23 @@ class GuessButton(discord.ui.Button):
         if interaction.user.id in view.guesses:
             await interaction.response.send_message("You already guessed!", ephemeral=True)
             return
-        view.guesses[interaction.user.id] = self.member.id
-        view.guess_times[interaction.user.id] = time.perf_counter() - view.started_at
+        view.guesses[interaction.user.id] = (self.member.id, time.perf_counter() - view.started_at)
         await interaction.response.send_message(f"You guessed {self.member.display_name}", ephemeral=True)
 
 
 class GuessView(discord.ui.View):
-    def __init__(self, question: str, author: discord.User | discord.Member, choices: list[discord.User | discord.Member], jump_url: str):
+    def __init__(self, author: discord.User | discord.Member, options: list[discord.User | discord.Member]):
         # No view timeout: it resets on every click, so the command ends the round itself with end_round()
         super().__init__(timeout=None)
-        self.question = question
         self.author = author
-        self.jump_url = jump_url  # link to the original message, shown once the answer is revealed
-        self.guesses: dict[int, int] = {}  # guesser id -> guessed member id
-        self.guess_times: dict[int, float] = {}  # guesser id -> seconds after the round started
+        # guesser id -> (guessed member id, seconds after the round started), in the order guesses came in
+        self.guesses: dict[int, tuple[int, float]] = {}
         self.started_at = time.perf_counter()
-        self.message: discord.Message | None = None
-        for member in choices:
+        for member in options:
             self.add_item(GuessButton(member))
 
-    async def end_round(self):
+    def end_round(self) -> str:
+        '''Disable the buttons, highlight the answer and summarize who got it right'''
         # Stop listening for clicks so no guesses land after the deadline
         self.stop()
         for item in self.children:
@@ -64,23 +61,13 @@ class GuessView(discord.ui.View):
             item.disabled = True
             if item.member.id == self.author.id:
                 item.style = discord.ButtonStyle.success
-        # Fastest correct guess first
-        winner_ids = sorted((uid for uid, guess in self.guesses.items() if guess == self.author.id),
-                            key=lambda uid: self.guess_times[uid])
-        winners = [f"<@{uid}> ({self.guess_times[uid]:.1f}s)" for uid in winner_ids]
-        result = ", ".join(winners) if winners else "nobody"
+        if not self.guesses:
+            return "Nobody played."
+        # Guesses are in the order they came in, so the fastest correct guess is first
+        winners = ", ".join(f"<@{uid}> ({seconds:.1f}s)" for uid, (guess, seconds) in self.guesses.items()
+                            if guess == self.author.id) or "nobody"
         played = len(self.guesses)
-        if played == 0:
-            summary = "Nobody played."
-        else:
-            summary = f"{played} {'person' if played == 1 else 'people'} played, {result} got it right."
-        if self.message is None:
-            return
-        await self.message.edit(
-            content=f"{self.question}\n\nIt was **{self.author.display_name}**! {summary}\n[Original message]({self.jump_url})",
-            view=self,
-            allowed_mentions=discord.AllowedMentions.none(),
-        )
+        return f"{played} {'person' if played == 1 else 'people'} played, {winners} got it right."
 
 
 class GuessWho(commands.Cog):
@@ -100,23 +87,25 @@ class GuessWhoGroup(app_commands.Group):
         # channel id -> (time fetched, history count fetched, messages newest first)
         self.history_cache: dict[int, tuple[float, int, list[discord.Message]]] = {}
 
-    async def get_history(self, source: HistorySource, limit: int) -> tuple[list[discord.Message], bool]:
-        '''The newest `limit` messages in the channel, and whether they came from the cache'''
+    async def get_history(self, source: HistorySource, limit: int) -> list[discord.Message]:
+        '''The newest `limit` messages in the channel, from the cache if it covers them'''
         cached = self.history_cache.get(source.id)
         if cached is None:
-            return await self.fetch_history(source, limit), False
+            return await self.fetch_history(source, limit)
         fetched_at, fetched_limit, messages = cached
         if time.time() - fetched_at >= CACHE_SECONDS:
-            return await self.fetch_history(source, limit), False
+            return await self.fetch_history(source, limit)
         # A smaller fetch can't cover a bigger one
         if fetched_limit < limit:
-            return await self.fetch_history(source, limit), False
+            return await self.fetch_history(source, limit)
         # History comes newest first, so slicing keeps the most recent messages
-        return messages[:limit], True
+        return messages[:limit]
 
     async def fetch_history(self, source: HistorySource, limit: int) -> list[discord.Message]:
         '''Fetch the newest `limit` messages from Discord and cache them'''
+        start = time.perf_counter()
         messages = [m async for m in source.history(limit=limit)]
+        print(f"GuessWho: fetched {len(messages)} messages from Discord in {time.perf_counter() - start:.2f}s")
         self.history_cache[source.id] = (time.time(), limit, messages)
         return messages
 
@@ -155,14 +144,11 @@ class GuessWhoGroup(app_commands.Group):
         # Reading history can take longer than the 3 second slash command limit
         await interaction.response.defer()
         # Pick a random human message with some text (or an image, if allowed) from recent channel history
-        history_start = time.perf_counter()
-        fetched, from_cache = await self.get_history(source, history)
-        history_seconds = time.perf_counter() - history_start
-        how = "from cache" if from_cache else "from Discord"
+        fetched = await self.get_history(source, history)
         messages = [m for m in fetched
                     if not m.author.bot and not m.content.startswith("!")
                     and (len(m.content) > 10 or (images and image_url(m)))]
-        print(f"GuessWho: got {len(fetched)} messages {how} in {history_seconds:.2f}s, {len(messages)} usable")
+        print(f"GuessWho: {len(messages)} of {len(fetched)} messages usable")
         if not messages:
             await interaction.followup.send("Couldn't find any messages to use.")
             return
@@ -183,11 +169,11 @@ class GuessWhoGroup(app_commands.Group):
         if url:
             # Discord shows the image under the message from the bare link
             question += f"\n{url}"
-        view = GuessView(question, author, options, picked.jump_url)
+        view = GuessView(author, options)
         # Discord renders this as a live "in X seconds" countdown on each viewer's client
         ends = int(time.time()) + seconds
         # The quoted message may contain mentions, don't ping anyone with them
-        view.message = await interaction.followup.send(
+        message = await interaction.followup.send(
             f"{question}\n\nEnds <t:{ends}:R>",
             view=view,
             wait=True,
@@ -195,4 +181,9 @@ class GuessWhoGroup(app_commands.Group):
         )
         # Wait until the countdown hits zero, however many guesses come in
         await asyncio.sleep(max(0, ends - time.time()))
-        await view.end_round()
+        summary = view.end_round()
+        await message.edit(
+            content=f"{question}\n\nIt was **{author.display_name}**! {summary}\n[Original message]({picked.jump_url})",
+            view=view,
+            allowed_mentions=discord.AllowedMentions.none(),
+        )
