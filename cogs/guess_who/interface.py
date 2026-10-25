@@ -27,7 +27,7 @@ def image_url(message: discord.Message) -> str | None:
 
 
 def is_usable(message: discord.Message, allow_images: bool) -> bool:
-    '''Whether the message is a human's, not a bot command, with enough text (or an image, if allowed) to guess from'''
+    '''Whether the message is a human's, with enough text (or an image, if allowed) to guess from'''
     if message.author.bot:
         return False
     # Short messages are only usable for their image
