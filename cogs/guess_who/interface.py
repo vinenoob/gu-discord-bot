@@ -63,8 +63,9 @@ class GuessButton(discord.ui.Button):
         if interaction.user.id in view.guesses:
             await interaction.response.send_message("You already guessed!", ephemeral=True)
             return
-        view.guesses[interaction.user.id] = (self.member.id, time.perf_counter() - view.started_at)
-        await interaction.response.send_message(f"You guessed {self.member.display_name}", ephemeral=True)
+        seconds = time.perf_counter() - view.started_at
+        view.guesses[interaction.user.id] = (self.member.id, seconds)
+        await interaction.response.send_message(f"You guessed {self.member.display_name} in {seconds:.1f}s", ephemeral=True)
 
 
 class GuessView(discord.ui.View):
